@@ -1,0 +1,13 @@
+:root {
+    --primary: #00A891 !important;
+    --primary-hover: #158576 !important;
+  }
+  div nav li a svg {
+    width: var(--font-size);
+    height: var(--font-size);
+    color: var(--contrast);
+  }
+  .no-styled-link{
+    color: initial;
+    text-decoration: none;
+}
