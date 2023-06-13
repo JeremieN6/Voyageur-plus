@@ -1,18 +1,21 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Chat Bot{% endblock %}
+{% block title %}Plannifiez vos vacances de rêve{% endblock %}
 
 {% block body %}
-<h1>Chat avec OpenAI GPT-3</h1>
+<h1>🚀 Plannifiez vos vacances de rêve 🚀</h1>
 
-    <form method="post" action="{{ path('chat') }}">
-        <input type="text" name="message" placeholder="Entrez votre message" required>
-        <button type="submit">Envoyer</button>
-    </form>
+    {{form_start(form)}}
+        {{form_row(form.destination)}}
+        {{form_row(form.submit)}}
+    {{form_end(form)}}
 
-    {% if response %}
-        <div>
-            <strong>IA:</strong> {{ response }}
-        </div>
+<div id="response">
+    {% if json %}
+       <article id="article">
+        <p>{{ json }}</p> 
+          <footer><small>Fait par <b>Voyageur+</b></small></footer>
+       </article> 
     {% endif %}
+</div>
 {% endblock %}

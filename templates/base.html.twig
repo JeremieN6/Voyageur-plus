@@ -28,7 +28,7 @@
 
         {% block javascripts %}
         <script>
-            let isLight = true
+            let isLight = false
             const html = document.documentElement
             const switchTheme = document.getElementById('theme_switcher')
             const os_default = '<svg viewBox="0 0 16 16"><path fill="currentColor" d="M8 15A7 7 0 1 0 8 1v14zm0 1A8 8 0 1 1 8 0a8 8 0 0 1 0 16z"/></svg>'
@@ -37,7 +37,7 @@
             
             document.addEventListener('DOMContentLoaded', () => {
             switchTheme.innerHTML = os_default
-            html.setAttribute('data-theme', 'auto')
+            html.setAttribute('data-theme', 'dark')
             // switchTheme.setAttribute('data-tooltip', 'os theme')
             switchTheme.focus()
             removeTooltip(3000)

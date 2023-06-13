@@ -11,3 +11,8 @@
     color: initial;
     text-decoration: none;
 }
+
+a, a:hover, a:active{
+  color: inherit;
+  text-decoration: none;
+}
