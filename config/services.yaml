@@ -12,10 +12,6 @@ services:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
 
-    App\Service\OpenAIChatService:
-        arguments:
-            $httpClient: '@GuzzleHttp\Client'
-            $openaiApiKey: '%openai_api_key%'
     GuzzleHttp\Client:
         arguments:
             $config:
