@@ -1,12 +1,18 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Plannifiez vos vacances de rêve{% endblock %}
+{% block title %}Voyage + | ChatBot {% endblock %}
 
 {% block body %}
 <h1>🚀 Plannifiez vos vacances de rêve 🚀</h1>
 
     {{form_start(form)}}
         {{form_row(form.destination)}}
+        {{form_row(form.duree_sejour)}}
+        {{form_row(form.nombre_personne_sejour)}}
+        {{form_row(form.budget_sejour)}}
+        {{form_row(form.saison_destination)}}
+        {{form_row(form.interet_preference)}}
+        {{form_row(form.restrictions)}}
         {{form_row(form.submit)}}
     {{form_end(form)}}
 
