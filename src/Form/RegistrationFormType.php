@@ -51,7 +51,7 @@ class RegistrationFormType extends AbstractType
                 ]
             ])
             ->add('ConsentementRGPD', CheckboxType::class, [
-                'label' => 'Consentement RGPD',
+                'label' => 'J\'accepte que mes données soit collectées dans le cadre de la loi RGPD.',
                 'mapped' => false,
                 'constraints' => [
                     new IsTrue([

@@ -5,23 +5,29 @@
 {% block body %}
 <h1>🚀 Plannifiez vos vacances de rêve 🚀</h1>
 
-    {{form_start(form)}}
-        {{form_row(form.destination)}}
-        {{form_row(form.duree_sejour)}}
-        {{form_row(form.nombre_personne_sejour)}}
-        {{form_row(form.budget_sejour)}}
-        {{form_row(form.saison_destination)}}
-        {{form_row(form.interet_preference)}}
-        {{form_row(form.restrictions)}}
-        {{form_row(form.submit)}}
-    {{form_end(form)}}
+{{form_start(form)}}
+{{form_row(form.destination)}}
+{{form_row(form.duree_sejour)}}
+{{form_row(form.nombre_personne_sejour)}}
+{{form_row(form.budget_sejour)}}
+{{form_row(form.saison_destination)}}
+{{form_row(form.interet_preference)}}
+{{form_row(form.restrictions)}}
+{{form_row(form.submit)}}
+{{form_end(form)}}
+<a href="{{path('app_home')}}">
+    <button class="outline">Retour</button>
+</a>
 
 <div id="response">
     {% if json %}
-       <article id="article">
-        <p>{{ json }}</p> 
-          <footer><small>Fait par <b>Voyageur+</b></small></footer>
-       </article> 
+    <article id="article">
+        <p>{{ json }}</p>
+        <p>
+            {{ dump(json) }}
+        </p>
+        <footer><small>Fait par <b>Voyageur+</b></small></footer>
+    </article>
     {% endif %}
 </div>
 {% endblock %}
