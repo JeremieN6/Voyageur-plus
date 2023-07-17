@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 class ChatBotController extends AbstractController
 {
     #[Route('/chat-bot', name: 'app_chat_bot')]
-    public function chatBot(Request $request, OpenAiService $openAi, \MercurySeries\FlashyBundle\FlashyNotifier $flashy): Response
+    public function chatBot(Request $request, OpenAiService $openAi): Response
     {
 
 
@@ -38,8 +38,6 @@ class ChatBotController extends AbstractController
         }   
         // $message = $request->get('message');
         // $response = $openAIChatService->sendMessage($message);
-
-        $flashy->info('Ca fonctionne', 'https://www.youtube.com/');
         
         return $this->render('chat_bot/chatBot.html.twig', [
             'form' => $form->createView(),

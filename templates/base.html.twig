@@ -27,6 +27,15 @@
 
 <body>
     {% include 'header.html.twig' %}
+    
+    {% if app.user and app.user.isVerified == false %}
+    <div class="flashy flashy--warning">
+        <i class="material-icons">speaker_notes</i>
+        <strong>Bonjour, </strong> votre compte n'est pas encore activé. <br>
+        <a class="flashy__body" href="{{path('resend_verif')}}" target="_blank">Renvoyez le lien d'activation.</a>
+    </div>
+    {% endif %}
+
     <main class="container">
         {% block body %}{% endblock %}
     </main>
@@ -70,6 +79,9 @@
     {% endblock %}
     <!-- Include Flashy default partial -->
     {{ include('@MercurySeriesFlashy/flashy.html.twig') }}
+    <script>
+        $(".my-alert").alert('my-close-button')
+        </script>
 </body>
 
 </html>
