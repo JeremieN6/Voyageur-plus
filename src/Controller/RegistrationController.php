@@ -119,7 +119,7 @@ class RegistrationController extends AbstractController
 
         if($user->getIsVerified())
         {
-            $this->$flashy->warning('Le compte utilisateur est déja activé !', '');
+            $flashy->warning('Le compte utilisateur est déja activé !', '');
             // $this->addFlash('warring', 'Cet utilisateur est déja activé !');
             return $this->redirectToRoute('app_home');
         }
