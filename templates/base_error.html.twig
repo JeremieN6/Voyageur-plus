@@ -26,7 +26,8 @@
 </head>
 
 <body>
-    
+    {% include 'header_error.html.twig' %}
+
     {% if app.user and app.user.isVerified == false %}
     <div class="flashy flashy--warning">
         <i class="material-icons">speaker_notes</i>
