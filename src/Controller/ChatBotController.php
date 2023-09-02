@@ -2,8 +2,15 @@
 
 namespace App\Controller;
 
+use App\Entity\Reponses;
+use App\Entity\Question;
+use App\Entity\Questions;
 use App\Form\QuestionsType;
+use App\Repository\QuestionsRepository;
+use App\Repository\UsersRepository;
 use App\Service\OpenAiService;
+use DateTimeImmutable;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -12,36 +19,130 @@ use Symfony\Component\HttpFoundation\Request;
 class ChatBotController extends AbstractController
 {
     #[Route('/chat-bot', name: 'app_chat_bot')]
-    public function chatBot(Request $request, OpenAiService $openAi): Response
-    {
+    public function chatBot(
+        QuestionsRepository $questionsRepository,
+        Request $request,
+        OpenAiService $openAi,
+        EntityManagerInterface $entityManager,
+        \MercurySeries\FlashyBundle\FlashyNotifier $flashy
+    ): Response {
 
+        $connectedUser = $this->getUser();
 
         $form = $this->createForm(QuestionsType::class);
         $form->handleRequest($request);
 
-        if($form->isSubmitted() && $form->isValid()){
+        //On vérifie que le formulaire est soumis et valide 
+        if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
             $interet_preference = explode(',', $data['interet_preference']);
             $restrictions = explode(',', $data['restrictions']);
-            $json = $openAi->getDestination($data['destination'],
-            $data['duree_sejour'],
-            $data['nombre_personne_sejour'],
-            $data['budget_sejour'],
-            $data['saison_destination'],
-            $interet_preference,
-            $restrictions
-        );
-            return $this->render('chat_bot/chatBot.html.twig', [
-                'form' => $form->createView(),
-                'json' => $json ?? null,
-            ]);
-        }   
-        // $message = $request->get('message');
-        // $response = $openAIChatService->sendMessage($message);
-        
+            $json = $openAi->getDestination(
+                $data['destination'],
+                $data['duree_sejour'],
+                $data['nombre_personne_sejour'],
+                $data['budget_sejour'],
+                $data['mobilite_sejour'],
+                $data['saison_destination'],
+                $interet_preference,
+                $restrictions
+            );
+
+            //On récupère le user connecté
+            $user = $this->getUser();
+
+            //On envoie les données du formulaire en base si le user est connecté
+            if ($user) {
+                
+                // Étape 1 : Récupérer les questions existantes depuis la base de données
+                $questions = $questionsRepository->findAll();
+
+                 // Créer un tableau pour stocker les IDs des questions
+                 $questionIdsArray = [];
+
+                 // Parcourir les questions et ajouter leurs IDs au tableau
+                 foreach ($questions as $question) {
+                     $questionIdsArray[] = $question->getId();
+                 }
+                // On récupère les réponses soumises depuis le formulaire
+                $reponsesData = $form->getData();
+
+                $destination = $reponsesData['destination'];
+                $dureeSejour = $reponsesData['duree_sejour'];
+                $nombrePersonnes = $reponsesData['nombre_personne_sejour'];
+                $budget_sejour = $reponsesData['budget_sejour'];
+                $mobilite_sejour = $reponsesData['mobilite_sejour'];
+                $saison_destination = $reponsesData['saison_destination'];
+                $interet_preference = $reponsesData['interet_preference'];
+                $restrictions = $reponsesData['restrictions'];
+
+                $finalData = [
+                    $destination, $dureeSejour, $nombrePersonnes, $budget_sejour, 
+                    $mobilite_sejour, $saison_destination, $interet_preference, $restrictions
+                ];
+
+                // Supposons que vous avez deux tableaux : $questionIdsArray et $reponsesData
+
+                // Créer un tableau pour stocker les associations question-réponse
+                $associations = [];
+
+                // Ajouter un élément vide au début du tableau $finalData pour que l'index 0 corresponde à la première question
+                // J'ai choisi de récupérer uniquement les réponses aux questions en les rangeant dans un tableau mais ça fonctionne également directement avec le tableau clé valeur $reponsesData
+                array_unshift($finalData, '');
+
+                foreach ($questionIdsArray  as $questionId) {
+                    // Récupérer l'ID de la question
+                    // $questionId = $question->getId();
+                    $fieldName = $question->getNomQuestion();
+                    $reponse = $form->get($fieldName)->getData();
+
+                    // Vérifier si la réponse pour cette question existe dans le tableau des réponses
+                    if (array_key_exists($questionId, $finalData)) {
+                        // Récupérer la réponse correspondante
+                        $reponse = $finalData[$questionId];
+
+                        // Associer l'ID de la question à la réponse dans le tableau d'associations
+                        $associations[$questionId] = $reponse;
+                    }
+                }
+                // dd($questionIdsArray, $finalData, $associations, $questionId);
+                // Maintenant, vous avez un tableau $associations qui contient les associations entre IDs de question et réponses
+
+                // Parcourir les associations et enregistrer les réponses en base de données
+                foreach ($associations as $questionId => $reponse) {
+                    // Récupérer l'objet Question depuis la base de données
+                    $question = $questionsRepository->find($questionId);
+
+                    if ($question) {
+                        // Créer une nouvelle instance de Réponses
+                        $reponseEntity = new Reponses();
+                        $reponseEntity->setQuestion($question);
+                        $reponseEntity->setLaReponse($reponse);
+                        $reponseEntity->setUser($user);
+                        $reponseEntity->setCreatedAt(new DateTimeImmutable());
+
+                        // Enregistrer la réponse en base de données
+                        $entityManager->persist($reponseEntity);
+                    }
+                }
+
+                $entityManager->flush();
+
+
+                $flashy->success('Envoyé à l\'AI & à la base de donné ✅. Vas voir !');
+                return $this->render('chat_bot/chatBot.html.twig', [
+                    'form' => $form->createView(),
+                    'user' => $connectedUser,
+                    'json' => $json ?? null,
+                ]);
+            }
+            $flashy->success('Un problème est survenu lors de l\'envoie... ⛔ !');
+        }
+
         return $this->render('chat_bot/chatBot.html.twig', [
             'form' => $form->createView(),
             'controller_name' => 'HomeController',
+            'user' => $connectedUser,
             'json' => $json ?? null,
         ]);
     }

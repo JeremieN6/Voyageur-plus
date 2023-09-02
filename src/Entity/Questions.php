@@ -25,8 +25,11 @@ class Questions
     #[ORM\Column(type: 'datetime_immutable', options: ['default' => 'CURRENT_TIMESTAMP'])]
     private ?\DateTimeImmutable $updated_at = null;
 
-    #[ORM\OneToMany(mappedBy: 'answer', targetEntity: Reponses::class, orphanRemoval: true)]
-    private Collection $reponses;
+    #[ORM\OneToMany(mappedBy: 'formAnswer', targetEntity: Reponses::class)]
+    private $reponses;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $nomQuestion = null;
 
     public function __construct()
     {
@@ -86,7 +89,7 @@ class Questions
     {
         if (!$this->reponses->contains($reponse)) {
             $this->reponses->add($reponse);
-            $reponse->setAnswer($this);
+            $reponse->setformAnswer($this);
         }
 
         return $this;
@@ -96,11 +99,24 @@ class Questions
     {
         if ($this->reponses->removeElement($reponse)) {
             // set the owning side to null (unless already changed)
-            if ($reponse->getAnswer() === $this) {
-                $reponse->setAnswer(null);
+            if ($reponse->getformAnswer() === $this) {
+                $reponse->setformAnswer(null);
             }
         }
 
         return $this;
     }
+
+    public function getNomQuestion(): ?string
+    {
+        return $this->nomQuestion;
+    }
+
+    public function setNomQuestion(?string $nomQuestion): self
+    {
+        $this->nomQuestion = $nomQuestion;
+
+        return $this;
+    }
+
 }

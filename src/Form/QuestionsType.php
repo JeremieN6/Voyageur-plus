@@ -18,49 +18,56 @@ class QuestionsType extends AbstractType
     {
         $builder
             ->add('destination', TextType::class, [
-                'label' => 'Destination',
+                'label' => 'Quelle est votre destination ?',
                 'attr' => [
-                    'placeholder' => 'Entrez la ville de destination'
+                    'placeholder' => 'Saisissez la ville de destination'
                 ],
             ])
             ->add('duree_sejour', IntegerType::class, [
-                'label' => 'Durée du séjour',
+                'label' => 'Quelle est la durée du séjour ?',
                 'attr' => [
-                    'placeholder' => 'Entrez la durée de votre séjour (en jours)'
+                    'placeholder' => 'Entrez la durée en jours'
                 ],
             ])
             ->add('nombre_personne_sejour', IntegerType::class, [
-                'label' => 'Nombre de personne(s)',
+                'label' => 'Combien il y a t-il de personne pour ce séjour ?',
                 'attr' => [
-                    'placeholder' => 'Entrez le nombre de personne(s) pour ce séjour'
+                    'placeholder' => 'Entrez le nombre de personne(s)'
                 ],
             ])
             ->add('budget_sejour', IntegerType::class, [
-                'label' => 'Votre budget',
+                'label' => 'Quel est votre budget ? (Budget par personne si vous voyagez en groupe)',
                 'attr' => [
-                    'placeholder' => 'Entrez votre budget pour ce séjour (Budget par personne si vous voyagez en groupe)'
+                    'placeholder' => 'Saisissez votre budget (en euros "€")'
+                ],
+            ])
+            ->add('mobilite_sejour', ChoiceType::class, [
+                'label' => 'Serez vous véhiculé lors de votre voyage ?',
+                'choices' => [
+                    'Voiture personnel' => "vehiculePerso",
+                    'Transport en commun (Bus, train, taxi, Uber etc)' => "transportCommun",
+                    'Location de véhicule sur place' => "locationVehicule",
+                    'Vélo, trotinette, roller' => "petiteLocomotion",
+                    'Autre' => "autre"
                 ],
             ])
             ->add('saison_destination', ChoiceType::class, [
-                'label' => 'Saison de destination',
+                'label' => 'Quelle est la saison de votre destination au moment de votre voyage ?',
                 'choices' => [
                     'Été' => "Ete",
                     'Automne' => "Automne",
                     'Hiver' => "Hiver",
                     'Printemps' => "Printemps"
                 ],
-                'attr' => [
-                    'placeholder' => 'Entrez la saison qu\'il fera lors de votre départ',
-                ],
             ])
             ->add('interet_preference', TextareaType::class, [
-                'label' => 'Vos intérêts & préférence',
+                'label' => 'Quelles sont vos centres d\'intérêt, vos préférences lorsque vous voyagez ?',
                 'attr' => [
-                    'placeholder' => 'Saisissez en un mot ce que vous aimez faire durant vos vacances. (Mettez une virgule après chaque mot)'
+                    'placeholder' => 'Séparez d\'une virgule après chaque mot'
                 ],
             ])
             ->add('restrictions', TextareaType::class, [
-                'label' => 'Vos restictions & avertions',
+                'label' => 'Quelles sont vos restrictions, vos aversions ?',
                 'attr' => [
                     'placeholder' => 'Saisissez en un mot ce qu\'il y a à savoir sur vous concernant vos alergies alimentaires, vos aversions lors de vos voyages'
                 ],

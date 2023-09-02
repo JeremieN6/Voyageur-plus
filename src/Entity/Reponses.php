@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\ReponsesRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ReponsesRepository::class)]
@@ -14,29 +15,36 @@ class Reponses
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'reponses')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Questions $answer = null;
+    #[ORM\JoinColumn(name:'the_answer', referencedColumnName:'id')]
+    private ?Questions $formAnswer = null;
 
     #[ORM\ManyToOne(inversedBy: 'reponses')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Users $user = null;
 
-    #[ORM\Column(type: 'datetime_immutable', options: ['default' => 'CURRENT_TIMESTAMP'])]
-    private ?\DateTimeImmutable $created_at = null;
+    #[ORM\ManyToOne(inversedBy: 'reponses')]
+    private ?Questions $question = null;
+
+    //(type: 'datetime_immutable', options: ['default' => 'CURRENT_TIMESTAMP', 'nullable' => true])
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $createdAt = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $laReponse = null;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getAnswer(): ?Questions
+    public function getformAnswer(): ?Questions
     {
-        return $this->answer;
+        return $this->formAnswer;
     }
 
-    public function setAnswer(?Questions $answer): self
+    public function setformAnswer(?Questions $formAnswer): self
     {
-        $this->answer = $answer;
+        $this->formAnswer = $formAnswer;
 
         return $this;
     }
@@ -53,15 +61,40 @@ class Reponses
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getQuestion(): ?Questions
     {
-        return $this->created_at;
+        return $this->question;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $created_at): self
+    public function setQuestion(?Questions $question): self
     {
-        $this->created_at = $created_at;
+        $this->question = $question;
 
         return $this;
     }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(?\DateTimeImmutable $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getLaReponse(): ?string
+    {
+        return $this->laReponse;
+    }
+
+    public function setLaReponse(?string $laReponse): self
+    {
+        $this->laReponse = $laReponse;
+
+        return $this;
+    }
+
 }

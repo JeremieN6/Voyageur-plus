@@ -3,13 +3,14 @@
 {% block title %}Voyage + | ChatBot {% endblock %}
 
 {% block body %}
-<h1>🚀 Plannifiez vos vacances de rêve 🚀</h1>
+<h1>🚀 Plannifiez vos vacances de rêve {{user.prenom}} 🚀</h1>
 
 {{form_start(form)}}
 {{form_row(form.destination)}}
 {{form_row(form.duree_sejour)}}
 {{form_row(form.nombre_personne_sejour)}}
 {{form_row(form.budget_sejour)}}
+{{form_row(form.mobilite_sejour)}}
 {{form_row(form.saison_destination)}}
 {{form_row(form.interet_preference)}}
 {{form_row(form.restrictions)}}
@@ -31,3 +32,47 @@
     {% endif %}
 </div>
 {% endblock %}
+
+{#{% extends 'base.html.twig' %}
+
+{% block title %}Voyage + | ChatBot {% endblock %}
+
+{% block body %}
+<h1>🚀 Plannifiez vos vacances de rêve 🚀</h1>
+
+<article id="article">
+    <div class="grid">
+        <div>
+        {{form_start(form)}}
+            {{form_row(form.destination)}}
+            {{form_row(form.duree_sejour)}}
+            {{form_row(form.nombre_personne_sejour)}}
+            {{form_row(form.budget_sejour)}}
+        </div>
+        <div>
+            {{form_row(form.mobilite_sejour)}}
+            {{form_row(form.saison_destination)}}
+            {{form_row(form.interet_preference)}}
+            {{form_row(form.restrictions)}}
+        </div>
+    </div>
+
+</article>
+{{form_row(form.submit)}}
+{{form_end(form)}}
+<a href="{{path('app_home')}}">
+    <button class="outline">Retour</button>
+</a>
+
+<div id="response">
+    {% if json %}
+    <article id="article">
+        <p>{{ json }}</p>
+        <p>
+            {{ dump(json) }}
+        </p>
+        <footer><small>Fait par <b>Voyageur+</b></small></footer>
+    </article>
+    {% endif %}
+</div>
+{% endblock %}#}

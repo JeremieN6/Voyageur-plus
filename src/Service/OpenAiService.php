@@ -19,6 +19,7 @@ class OpenAiService{
         int $nombre_personne_sejour,
         int $budget_sejour,
         string $saison_destination,
+        string $mobilite_sejour,
         array $interet_preference,
         array $restrictions): string
     {
@@ -33,7 +34,8 @@ class OpenAiService{
             Fais moi un planning sur mon séjour dont la destination est :' .$destination.' et qui vas durer'.$duree_sejour.'jours.
             Le nombre de voyageur pour ce séjour est de'.$nombre_personne_sejour.'personnes.
             Le budget par personne est de'.$budget_sejour.'.
-            Pendant mon voyage la saison de la destination sera en : '.$saison_destination.'.
+            Pendant mon voyage la saison de la destination sera en : '.$saison_destination.'
+            Pendant ce voyage le moyen de déplacement sera exclusivement en : '.$mobilite_sejour.'
             Je vais pour finir te donner une liste de mes préférence lorsque je voyage : '.implode(',', $interet_preference).'.
             et une liste de toute les choses dont je ne veux pas entendre parler pendant mon séjour : '.implode(',', $restrictions).'
             En te basant sur les élements que je t\'ai fourni, rédige moi une liste en revenant à la ligne pour chaque nouveau jour.',
