@@ -53,6 +53,12 @@ class ChatBotController extends AbstractController
 
             //On envoie les données du formulaire en base si le user est connecté
             if ($user) {
+
+                // Obtenir un chiffre aléatoire entre 0 et 9
+                $randomDigit = mt_rand(0, 999);
+
+                // Créer la clé complète en combinant les parties
+                $formKey = 'FRM#' . substr($randomDigit, -4);
                 
                 // Étape 1 : Récupérer les questions existantes depuis la base de données
                 $questions = $questionsRepository->findAll();
@@ -119,6 +125,7 @@ class ChatBotController extends AbstractController
                         $reponseEntity->setQuestion($question);
                         $reponseEntity->setLaReponse($reponse);
                         $reponseEntity->setUser($user);
+                        $reponseEntity->setFormNumber($formKey);
                         $reponseEntity->setCreatedAt(new DateTimeImmutable());
 
                         // Enregistrer la réponse en base de données

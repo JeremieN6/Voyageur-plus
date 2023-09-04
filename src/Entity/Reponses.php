@@ -32,6 +32,9 @@ class Reponses
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $laReponse = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?string $formNumber = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -93,6 +96,18 @@ class Reponses
     public function setLaReponse(?string $laReponse): self
     {
         $this->laReponse = $laReponse;
+
+        return $this;
+    }
+
+    public function getFormNumber(): ?string
+    {
+        return $this->formNumber;
+    }
+
+    public function setFormNumber(?string $formNumber): self
+    {
+        $this->formNumber = $formNumber;
 
         return $this;
     }
