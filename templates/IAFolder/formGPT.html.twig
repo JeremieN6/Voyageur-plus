@@ -20,15 +20,6 @@
     <button class="outline">Retour</button>
 </a>
 
-<div id="response">
-    {% if json %}
-    <article id="article">
-        <h3>Votre Planning par l'IA</h3>
-        <p>{{ json | nl2br }}</p>
-        <footer><small>Fait par <b>Voyageur+</b></small></footer>
-    </article>
-    {% endif %}
-</div>
 {% endblock %}
 
 {#{% extends 'base.html.twig' %}

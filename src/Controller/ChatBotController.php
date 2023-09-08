@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class ChatBotController extends AbstractController
 {
-    #[Route('/chat-bot', name: 'app_chat_bot')]
+    #[Route('/generate-plan', name: 'app_generate_plan')]
     public function chatBot(
         QuestionsRepository $questionsRepository,
         Request $request,
@@ -34,19 +34,19 @@ class ChatBotController extends AbstractController
 
         //On vérifie que le formulaire est soumis et valide 
         if ($form->isSubmitted() && $form->isValid()) {
-            $data = $form->getData();
-            $interet_preference = explode(',', $data['interet_preference']);
-            $restrictions = explode(',', $data['restrictions']);
-            $json = $openAi->getDestination(
-                $data['destination'],
-                $data['duree_sejour'],
-                $data['nombre_personne_sejour'],
-                $data['budget_sejour'],
-                $data['mobilite_sejour'],
-                $data['saison_destination'],
-                $interet_preference,
-                $restrictions
-            );
+            // $data = $form->getData();
+            // $interet_preference = explode(',', $data['interet_preference']);
+            // $restrictions = explode(',', $data['restrictions']);
+            // $json = $openAi->getDestination(
+            //     $data['destination'],
+            //     $data['duree_sejour'],
+            //     $data['nombre_personne_sejour'],
+            //     $data['budget_sejour'],
+            //     $data['mobilite_sejour'],
+            //     $data['saison_destination'],
+            //     $interet_preference,
+            //     $restrictions
+            // );
 
             //On récupère le user connecté
             $user = $this->getUser();
@@ -126,7 +126,7 @@ class ChatBotController extends AbstractController
                         $reponseEntity->setLaReponse($reponse);
                         $reponseEntity->setUser($user);
                         $reponseEntity->setFormNumber($formKey);
-                        $reponseEntity->setReponseIA($json);
+                        // $reponseEntity->setReponseIA($json);
                         $reponseEntity->setCreatedAt(new DateTimeImmutable());
 
                         // Enregistrer la réponse en base de données
@@ -138,7 +138,7 @@ class ChatBotController extends AbstractController
 
 
                 $flashy->success('Envoyé à l\'AI & à la base de donné ✅. Vas voir !');
-                return $this->render('chat_bot/chatBot.html.twig', [
+                return $this->render('IAFolder/reponseIA.html.twig', [
                     'form' => $form->createView(),
                     'user' => $connectedUser,
                     'json' => $json ?? null,
@@ -147,11 +147,22 @@ class ChatBotController extends AbstractController
             $flashy->success('Un problème est survenu lors de l\'envoie... ⛔ !');
         }
 
-        return $this->render('chat_bot/chatBot.html.twig', [
+        return $this->render('IAFolder/formGPT.html.twig', [
             'form' => $form->createView(),
             'controller_name' => 'HomeController',
             'user' => $connectedUser,
             'json' => $json ?? null,
+        ]);
+    }
+
+    #[Route('/mes_voyages', name: 'app_voyages')]
+    public function mesVoyages(): Response
+    {
+        $connectedUser = $this->getUser();
+
+        return $this->render('userView/mesVoyages.html.twig', [
+            'controller_name' => 'HomeController',
+            'user' => $connectedUser
         ]);
     }
 }

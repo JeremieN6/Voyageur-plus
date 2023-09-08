@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Voyage + | ChatBot {% endblock %}
+
+{% block body %}
+<h1>🚀 Votre planning de rêve {{user.prenom}} 🚀</h1>
+
+<div id="response">
+    {% if json %}
+    <article id="article">
+        <p>{{ json | nl2br }}</p> <br>
+        <a href="{{path('app_voyages')}}">
+            <p>Voir mes planning de voyages</p>
+        </a>
+        <footer><small>Fait par <b>Voyageur+</b></small></footer>
+    </article>
+    {% else %}
+    <article id="article">
+        <h3>Votre Planning par l'IA</h3>
+        <p>Aucun planning disponible... Veuillez nous excuser! 🫠</p> <br>
+        <a href="{{path('app_voyages')}}">
+            <p>Voir mes planning de voyages</p>
+        </a
+        <footer><small>Fait par <b>Voyageur+</b></small></footer>
+    </article>
+    {% endif %}
+</div>
+{% endblock %}
