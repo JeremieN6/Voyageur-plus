@@ -35,6 +35,9 @@ class Reponses
     #[ORM\Column(nullable: true)]
     private ?string $formNumber = null;
 
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $reponseIA = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -108,6 +111,18 @@ class Reponses
     public function setFormNumber(?string $formNumber): self
     {
         $this->formNumber = $formNumber;
+
+        return $this;
+    }
+
+    public function getReponseIA(): ?string
+    {
+        return $this->reponseIA;
+    }
+
+    public function setReponseIA(?string $reponseIA): self
+    {
+        $this->reponseIA = $reponseIA;
 
         return $this;
     }
