@@ -14,9 +14,9 @@ class Reponses
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(inversedBy: 'reponses')]
-    #[ORM\JoinColumn(name:'the_answer', referencedColumnName:'id')]
-    private ?Questions $formAnswer = null;
+    // #[ORM\ManyToOne(inversedBy: 'reponses')]
+    // #[ORM\JoinColumn(name:'the_answer', referencedColumnName:'id')]
+    // private ?Questions $formAnswer = null;
 
     #[ORM\ManyToOne(inversedBy: 'reponses')]
     #[ORM\JoinColumn(nullable: false)]
@@ -43,17 +43,17 @@ class Reponses
         return $this->id;
     }
 
-    public function getformAnswer(): ?Questions
-    {
-        return $this->formAnswer;
-    }
+    // public function getformAnswer(): ?Questions
+    // {
+    //     return $this->formAnswer;
+    // }
 
-    public function setformAnswer(?Questions $formAnswer): self
-    {
-        $this->formAnswer = $formAnswer;
+    // public function setformAnswer(?Questions $formAnswer): self
+    // {
+    //     $this->formAnswer = $formAnswer;
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
     public function getUser(): ?Users
     {

@@ -39,6 +39,24 @@ class ReponsesRepository extends ServiceEntityRepository
         }
     }
 
+    public function findDistinctFormNumbers()
+    {
+        $qb = $this->createQueryBuilder('r')
+            ->select('DISTINCT r.formNumber')
+            ->getQuery();
+
+        return $qb->getResult();
+    }
+
+    public function findByFormNumberCustom($formNumber)
+    {
+        return $this->createQueryBuilder('r')
+            ->andWhere('r.formNumber = :formNumber')
+            ->setParameter('formNumber', $formNumber)
+            ->getQuery()
+            ->getResult();
+    }
+
 //    /**
 //     * @return Reponses[] Returns an array of Reponses objects
 //     */
