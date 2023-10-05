@@ -7,16 +7,39 @@
 {% if mesVoyages is empty %}
 <p>Vous n'avez pas encore soumis de formulaires de voyage.</p>
 {% else %}
-<ul>
+
     {% for formNumber, responses in responsesByForm %}
-    <h3>Numéro de formulaire : {{ formNumber }}</h3>
-        <ul>
-            {% for response in responses %}
-                <li>{{ response.laReponse }}</li>
-                {# <li>{{ response.reponseIA }}</li> #}
-            {% endfor %}
-        </ul>
+    <article id="article">
+        <h2>Numéro de formulaire : {{ formNumber }}</h2>
+        <p>
+            <ul>
+                {% for response in responses %}
+                    <li>
+                        <span>Question : {{ response.question.questionText }}</span>
+                        <p>Réponse : {{ response.laReponse }}</p>
+                    </li>
+                {% endfor %}
+
+                {% for response in responses %}
+                    {% if loop.first %}
+                        <hgroup>
+                            <h3>Planning de l'IA</h3>
+                            <p>{{ response.reponseIA|raw|nl2br }}</p>
+                        </hgroup>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </p>
+        {% for response in responses %}
+            {% if loop.first %}
+        <footer>
+            <small><em>Formulaire soumis le {{ response.createdAt.format('d m Y à H:i') }}</em></small>
+        </footer>
+            {% endif %}
+        {% endfor %}
+      </article>
+
     {% endfor %}
-</ul>
+
 {% endif %}
 {% endblock %}

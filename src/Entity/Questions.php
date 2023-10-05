@@ -89,7 +89,7 @@ class Questions
     {
         if (!$this->reponses->contains($reponse)) {
             $this->reponses->add($reponse);
-            $reponse->setformAnswer($this);
+            // $reponse->setformAnswer($this);
         }
 
         return $this;
@@ -99,9 +99,9 @@ class Questions
     {
         if ($this->reponses->removeElement($reponse)) {
             // set the owning side to null (unless already changed)
-            if ($reponse->getformAnswer() === $this) {
-                $reponse->setformAnswer(null);
-            }
+            // if ($reponse->getformAnswer() === $this) {
+            //     $reponse->setformAnswer(null);
+            // }
         }
 
         return $this;
