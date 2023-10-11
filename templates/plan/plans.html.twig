@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Voyage + | ChatBot {% endblock %}
+
+{% block body %}
+
+{% for item in Plan %}
+
+<div class="grid">
+    <article id="article">
+        <h3>
+            {{item.nom}}
+        </h3>
+        <p>
+            {{item.description}}
+        </p>
+
+        <a href="{{item.paymentLink}}" target="_blank">
+            <button>Acheter</button>
+        </a>
+    
+        <footer>
+            <small><em>Par Voyageur+</em></small>
+        </footer>
+    
+      </article>
+</div>
+
+{% endfor %}
+
+{% endblock %}

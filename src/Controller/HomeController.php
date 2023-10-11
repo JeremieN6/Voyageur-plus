@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Test;
 use App\Form\TestType;
+use App\Repository\PlanRepository;
 use App\Repository\TestRepository;
 use App\Repository\UsersRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -27,6 +28,17 @@ class HomeController extends AbstractController
     {
         return $this->render('home/contact.html.twig', [
             'controller_name' => 'HomeController',
+        ]);
+    }
+
+    #[Route('/abonnement', name: 'abonnement')]
+    public function abonnement(PlanRepository $planRepository): Response
+    {
+        $plan = $planRepository->findAll();
+
+        return $this->render('plan/plans.html.twig', [
+            'Plan' => $plan,
+            'controller_name' => 'ParametresUserController',
         ]);
     }
 
