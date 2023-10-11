@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Voyageur+ | 🫡 Contactez nous{% endblock %}
+
+{% block body %}
+
+<main class="container">
+
+    <hgroup>
+      <h2>Passez nous le bonjour ! 🙂</h2>
+      <p>Remplissez le formulaire pour joindre notre équipe Voyage+ en quelques clics.</p>
+    </hgroup>
+    {{form_start(contactForm)}}
+      <!-- Grid -->
+      <div class="grid">
+
+        {{form_row(contactForm.nom)}}
+    
+        {{form_row(contactForm.prenom)}}
+
+        {{form_row(contactForm.email)}}
+    
+      </div>
+    
+      {{form_row(contactForm.message)}}
+      <small>Nous ne partagerons jamais votre adresse mail.</small>
+    
+      <!-- Button -->
+      {{form_row(contactForm.submit)}}
+      {{form_end(contactForm)}}
+
+  </main>
+
+{% endblock %}

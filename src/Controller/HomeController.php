@@ -3,14 +3,17 @@
 namespace App\Controller;
 
 use App\Entity\Test;
+use App\Form\ContactType;
 use App\Form\TestType;
 use App\Repository\PlanRepository;
 use App\Repository\TestRepository;
 use App\Repository\UsersRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Mime\Email;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 class HomeController extends AbstractController
@@ -24,10 +27,39 @@ class HomeController extends AbstractController
     }
 
     #[Route('/contact', name: 'app_contact')]
-    public function contact(): Response
+    public function contact(
+        Request $request, 
+        MailerInterface $mailer,
+        \MercurySeries\FlashyBundle\FlashyNotifier $flashy): Response
     {
-        return $this->render('home/contact.html.twig', [
+        $contactForm = $this->createForm(ContactType::class);
+
+        $contactForm->handleRequest($request);
+
+        if ($contactForm->isSubmitted() && $contactForm->isValid()){
+            $data = $contactForm->getData();
+
+            $mailAdress = $data['email'];
+            $emailMessage = $data['message'];
+
+            $email = (new Email())
+                ->from($mailAdress)
+                ->to('contact@voyageur-plus.fr')
+                ->subject('Email de contact')
+                ->text($emailMessage);
+
+                $mailer->send($email);
+
+                // Utilisez Flashy pour afficher un message flash de succès
+                $flashy->success('Votre email a bien été envoyé ✅ !');
+
+                // Redirigez l'utilisateur vers la même page (rafraîchissement)
+                return $this->redirectToRoute('app_contact');
+        }
+
+        return $this->render('contact/contact.html.twig', [
             'controller_name' => 'HomeController',
+            'contactForm' => $contactForm->createView()
         ]);
     }
 
