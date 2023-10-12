@@ -25,13 +25,13 @@
       Dites-nous où vous rêvez d'aller, définissez vos préférences et laissez la magie opérer. 
       Notre plateforme intelligente vous guidera vers des destinations de rêve, des activités inoubliables et des aventures adaptées
       à votre style de voyage.
-      <br><br>
+      <br>
 
       La promesse que nous vous faisons, c'est que votre voyage ne sera plus jamais le même. 
       Vous profiterez d'une planification sans stress, de recommandations pertinentes et d'une expérience de voyage inégalée. 
       Notre application simplifie, organise et personnalise chaque aspect de votre aventure. Elle devient votre compagnon de voyage,
       votre guide personnel, et votre accès à un monde de découvertes.
-      <br><br>
+      <br>
       
       Que vous voyagiez en solo, en couple, en famille ou entre amis, que vous soyez un explorateur chevronné ou un novice curieux, notre application est conçue pour vous. Elle vous offre la liberté de voyager en toute confiance, de réaliser vos rêves et de créer des souvenirs inoubliables. Rejoignez-nous dans cette aventure et explorez le monde comme jamais auparavant, avec Voyageur+</p>
   </hgroup>
@@ -46,19 +46,20 @@
         J'ai récemment utilisé Voyageur+ pour planifier mon voyage à Bali, et cela a vraiment transformé mon expérience. 
         Dès le moment où j'ai créé mon profil et répondu au questionnaire personnalisé, j'ai su que ce voyage serait spécial. 
         L'application m'a recommandé des plages paradisiaques que je n'aurais jamais découvertes autrement, des restaurants locaux incroyables et des expériences authentiques, loin des foules touristiques.
-        <br><br>
+        <br>
 
-        Grâce à l'application, j'ai pu explorer Bali à mon rythme, en fonction de mes préférences. <br>
+        Grâce à l'application, j'ai pu explorer Bali à mon rythme, en fonction de mes préférences. 
         C'était comme avoir un guide de voyage personnel dans ma poche. 
-        J'ai également rencontré des voyageurs partageant les mêmes intérêts grâce à la communauté de l'application. 
-        En fin de compte, j'ai vécu un voyage à Bali inoubliable, rempli de moments magiques que je chérirai pour toujours. 
+        J'ai également rencontré des voyageurs partageant les mêmes intérêts grâce à la communauté de l'application. <br><br>
+        En fin de compte, j'ai vécu un voyage à Bali inoubliable, rempli de moments magiques que je chérirai pour toujours. <br><br>
         Voyageur+ a rendu mon rêve de Bali réalité, et je ne peux plus m'en passer pour mes prochaines aventures.
         <br><br>
       </p>
       <footer><small>Par Laura M.</small></footer>
     </article>
+
     <article id="article">
-      <h3><em>«Un super voyage au Japon»</em></h3>
+      <h3><em>«Un super voyage au Japon avec l'outil»</em></h3>
       <p>
         Mon récent voyage au Japon avec Voyageur+ a été une expérience tout simplement extraordinaire. 
         En tant que voyageur passionné, j'ai été agréablement surpris par 
@@ -88,12 +89,15 @@
     <h3>S'abonner</h3>
     <small><p>Abonnez vous à la newsletter pour être au courant des prochaines promotions, mises à jours et jeux concours. 🙂</p></small>
   </hgroup>
-  <form>
-    <div class="grid">
-      <input type="email" placeholder="Email">
-      <button type="submit">S'abonner</button>
-    </div>
-  </form>
 
-  <!-- <article aria-busy="true"></article> -->
+
+
+      {{ form_start(formNewsletter) }}
+      <div class="grid">
+      {{ form_row(formNewsletter.email) }}
+      {{form_row(formNewsletter.submit)}}
+    
+    {{ form_end(formNewsletter) }}
+  </div>
+
 {% endblock %}

@@ -2,12 +2,11 @@
 
 namespace App\Controller;
 
-use App\Entity\Test;
+use App\Entity\Newsletter;
 use App\Form\ContactType;
-use App\Form\TestType;
+use App\Form\NewsletterType;
+use App\Repository\NewsletterRepository;
 use App\Repository\PlanRepository;
-use App\Repository\TestRepository;
-use App\Repository\UsersRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Mime\Email;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -19,10 +18,42 @@ use Symfony\Component\Routing\Annotation\Route;
 class HomeController extends AbstractController
 {
     #[Route('/', name: 'app_home')]
-    public function index(): Response
+    public function index(
+        Request $request,
+        EntityManagerInterface $entityManager,
+        NewsletterRepository $newsletterRepository,
+        \MercurySeries\FlashyBundle\FlashyNotifier $flashy): Response
     {
+
+        $formNewsletter = $this->createForm(NewsletterType::class);
+        $formNewsletter->handleRequest($request);
+
+        if($formNewsletter->isSubmitted() && $formNewsletter->isValid()){
+            $email = $formNewsletter->get('email')->getData();
+
+            $emailExist = $newsletterRepository->findOneBy(['email' => $email]);
+
+            if($emailExist){
+                $flashy->warning('Cet e-mail est déjà inscrit à la Newsletter.');
+                return $this->redirectToRoute('app_home');
+            }else{
+                $newsletterEmail = new Newsletter();
+                $newsletterEmail->setEmail($email);
+    
+                $entityManager->persist($newsletterEmail);
+                $entityManager->flush();
+    
+                $flashy->success('Vous avez été ajouté à la Newsletter !');
+    
+                return $this->redirectToRoute('app_home');
+            }
+        } elseif ($formNewsletter->isSubmitted() && !$formNewsletter->isValid()) {
+            $flashy->error('Une erreur est survenue lors de l\'ajout à la Newsletter.');
+        }
+
         return $this->render('home/index.html.twig', [
             'controller_name' => 'HomeController',
+            'formNewsletter' => $formNewsletter->createView()
         ]);
     }
 
@@ -55,6 +86,8 @@ class HomeController extends AbstractController
 
                 // Redirigez l'utilisateur vers la même page (rafraîchissement)
                 return $this->redirectToRoute('app_contact');
+        }elseif ($contactForm->isSubmitted() && !$contactForm->isValid()) {
+            $flashy->error('Une erreur est survenue lors de l\'envoie du mail. Veuillez réessayer.');
         }
 
         return $this->render('contact/contact.html.twig', [
