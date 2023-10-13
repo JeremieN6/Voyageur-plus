@@ -46,19 +46,19 @@ class ChatBotController extends AbstractController
 
                 //On vérifie que le formulaire est soumis et valide 
                 if ($form->isSubmitted() && $form->isValid()) {
-                    // $data = $form->getData();
-                    // $interet_preference = explode(',', $data['interet_preference']);
-                    // $restrictions = explode(',', $data['restrictions']);
-                    // $json = $openAi->getDestination(
-                    //     $data['destination'],
-                    //     $data['duree_sejour'],
-                    //     $data['nombre_personne_sejour'],
-                    //     $data['budget_sejour'],
-                    //     $data['mobilite_sejour'],
-                    //     $data['saison_destination'],
-                    //     $interet_preference,
-                    //     $restrictions
-                    // );
+                    $data = $form->getData();
+                    $interet_preference = explode(',', $data['interet_preference']);
+                    $restrictions = explode(',', $data['restrictions']);
+                    $json = $openAi->getDestination(
+                        $data['destination'],
+                        $data['duree_sejour'],
+                        $data['nombre_personne_sejour'],
+                        $data['budget_sejour'],
+                        $data['mobilite_sejour'],
+                        $data['saison_destination'],
+                        $interet_preference,
+                        $restrictions
+                    );
 
                     //On récupère le user connecté
                     $user = $this->getUser();
@@ -199,7 +199,6 @@ class ChatBotController extends AbstractController
         }
         else{
         // Récupérer tous les numéros de formulaire distincts
-        // $distinctFormNumbers = $reponsesRepository->findDistinctFormNumbers();
         $distinctFormNumbers = $reponsesRepository->findDistinctFormNumbersByUser($connectedUser);
 
         // Initialiser un tableau pour stocker les réponses par numéro de formulaire
@@ -212,7 +211,6 @@ class ChatBotController extends AbstractController
             $formNumber = $formNumberArray["formNumber"];
 
             // Récupérer les réponses associées à ce numéro de formulaire
-            // $responsesForForm = $reponsesRepository->findByFormNumberCustom($formNumber);
             $responsesForForm = $reponsesRepository->findByFormNumberCustomAndUser($formNumber, $connectedUser);
             // $testNumber = $formNumber["formNumber"];
 
