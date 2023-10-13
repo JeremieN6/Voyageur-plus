@@ -90,7 +90,15 @@ class Subscription
 
     public function setIsActive(?bool $isActive): self
     {
-        $this->isActive = $isActive;
+        // Obtenez la date actuelle
+        $currentDate = new \DateTime();
+
+        // Comparez la date actuelle avec la date de début et de fin de l'abonnement
+        if ($this->currentPeriodStart <= $currentDate && $currentDate <= $this->currentPeriodEnd) {
+            $this->isActive = true;
+        } else {
+            $this->isActive = false;
+        }
 
         return $this;
     }

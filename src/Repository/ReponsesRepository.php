@@ -48,11 +48,53 @@ class ReponsesRepository extends ServiceEntityRepository
         return $qb->getResult();
     }
 
+    public function findDistinctFormNumbersByUser($user)
+    {
+        return $this->createQueryBuilder('r')
+            ->select('DISTINCT r.formNumber')
+            ->where('r.user = :user')
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function countDistinctFormNumbers()
+    {
+        $qb = $this->createQueryBuilder('r')
+            ->select('COUNT(DISTINCT r.formNumber) as formCount')
+            ->getQuery();
+
+        return $qb->getSingleScalarResult();
+    }
+
+    public function countDistinctFormNumbersByUser($user)
+    {
+        $qb = $this->createQueryBuilder('r')
+            ->select('COUNT(DISTINCT r.formNumber) as formCount')
+            ->where('r.user = :user')
+            ->setParameter('user', $user)
+            ->getQuery();
+
+        return $qb->getSingleScalarResult();
+    }
+
+
     public function findByFormNumberCustom($formNumber)
     {
         return $this->createQueryBuilder('r')
             ->andWhere('r.formNumber = :formNumber')
             ->setParameter('formNumber', $formNumber)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findByFormNumberCustomAndUser($formNumber, $user)
+    {
+        return $this->createQueryBuilder('r')
+            ->andWhere('r.formNumber = :formNumber')
+            ->andWhere('r.user = :user')
+            ->setParameter('formNumber', $formNumber)
+            ->setParameter('user', $user)
             ->getQuery()
             ->getResult();
     }

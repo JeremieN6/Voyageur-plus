@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Subscription;
+use App\Entity\Users;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -109,6 +110,20 @@ class SubscriptionRepository extends ServiceEntityRepository
         ;
 
         return $qb->getOneOrNullResult();
+    }
+
+    public function hasActiveSubscription(Users $user)
+    {
+        $currentDate = new \DateTime(); // Obtenez la date actuelle
+
+        return $this->createQueryBuilder('s')
+            ->where('s.user = :user') // Filtrez les abonnements de cet utilisateur
+            ->andWhere('s.currentPeriodStart <= :currentDate') // Vérifiez si la période de début est antérieure à la date actuelle
+            ->andWhere('s.currentPeriodEnd >= :currentDate') // Vérifiez si la période de fin est postérieure à la date actuelle
+            ->setParameter('user', $user)
+            ->setParameter('currentDate', $currentDate)
+            ->getQuery()
+            ->getResult();
     }
 
 //    /**

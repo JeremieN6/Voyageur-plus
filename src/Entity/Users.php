@@ -342,6 +342,17 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    public function hasActiveSubscription(): bool
+    {
+        foreach ($this->subscriptions as $subscription) {
+            if ($subscription->isActive()) {
+                return true; // L'utilisateur a au moins un abonnement actif
+            }
+        }
+
+        return false; // Aucun abonnement actif trouvé
+    }
+
     public function getStripeId(): ?string
     {
         return $this->stripeId;

@@ -5,9 +5,11 @@ namespace App\Controller;
 use App\Entity\Reponses;
 use App\Entity\Question;
 use App\Entity\Questions;
+use App\Entity\Subscription;
 use App\Form\QuestionsType;
 use App\Repository\QuestionsRepository;
 use App\Repository\ReponsesRepository;
+use App\Repository\SubscriptionRepository;
 use App\Repository\UsersRepository;
 use App\Service\OpenAiService;
 use DateTimeImmutable;
@@ -25,129 +27,145 @@ class ChatBotController extends AbstractController
         Request $request,
         OpenAiService $openAi,
         EntityManagerInterface $entityManager,
+        ReponsesRepository $reponsesRepository,
+        SubscriptionRepository $subscriptionRepository,
         \MercurySeries\FlashyBundle\FlashyNotifier $flashy
     ): Response {
 
         $connectedUser = $this->getUser();
 
-        $form = $this->createForm(QuestionsType::class);
-        $form->handleRequest($request);
+        if($connectedUser){
+            $activeSubscriptions = $subscriptionRepository->hasActiveSubscription($connectedUser);
+            $formSubmissionLimit = 3;
+            $formSubmissionsNumber = $reponsesRepository->countDistinctFormNumbersByUser($connectedUser);
+        
+            if (count($activeSubscriptions) > 0 || $formSubmissionsNumber < $formSubmissionLimit) {
 
-        //On vérifie que le formulaire est soumis et valide 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $data = $form->getData();
-            $interet_preference = explode(',', $data['interet_preference']);
-            $restrictions = explode(',', $data['restrictions']);
-            $json = $openAi->getDestination(
-                $data['destination'],
-                $data['duree_sejour'],
-                $data['nombre_personne_sejour'],
-                $data['budget_sejour'],
-                $data['mobilite_sejour'],
-                $data['saison_destination'],
-                $interet_preference,
-                $restrictions
-            );
+                $form = $this->createForm(QuestionsType::class);
+                $form->handleRequest($request);
 
-            //On récupère le user connecté
-            $user = $this->getUser();
+                //On vérifie que le formulaire est soumis et valide 
+                if ($form->isSubmitted() && $form->isValid()) {
+                    // $data = $form->getData();
+                    // $interet_preference = explode(',', $data['interet_preference']);
+                    // $restrictions = explode(',', $data['restrictions']);
+                    // $json = $openAi->getDestination(
+                    //     $data['destination'],
+                    //     $data['duree_sejour'],
+                    //     $data['nombre_personne_sejour'],
+                    //     $data['budget_sejour'],
+                    //     $data['mobilite_sejour'],
+                    //     $data['saison_destination'],
+                    //     $interet_preference,
+                    //     $restrictions
+                    // );
 
-            //On envoie les données du formulaire en base si le user est connecté
-            if ($user) {
+                    //On récupère le user connecté
+                    $user = $this->getUser();
 
-                // Obtenir un chiffre aléatoire entre 0 et 9
-                $randomDigit = mt_rand(0, 999);
+                    //On envoie les données du formulaire en base si le user est connecté
+                    if ($user) {
 
-                // Créer la clé complète en combinant les parties
-                $formKey = 'FRM#' . substr($randomDigit, -4);
-                
-                // Étape 1 : Récupérer les questions existantes depuis la base de données
-                $questions = $questionsRepository->findAll();
+                        // Obtenir un chiffre aléatoire entre 0 et 9
+                        $randomDigit = mt_rand(0, 999);
 
-                 // Créer un tableau pour stocker les IDs des questions
-                 $questionIdsArray = [];
+                        // Créer la clé complète en combinant les parties
+                        $formKey = 'FRM#' . substr($randomDigit, -4);
+                        
+                        // Étape 1 : Récupérer les questions existantes depuis la base de données
+                        $questions = $questionsRepository->findAll();
 
-                 // Parcourir les questions et ajouter leurs IDs au tableau
-                 foreach ($questions as $question) {
-                     $questionIdsArray[] = $question->getId();
-                 }
-                // On récupère les réponses soumises depuis le formulaire
-                $reponsesData = $form->getData();
+                        // Créer un tableau pour stocker les IDs des questions
+                        $questionIdsArray = [];
 
-                $destination = $reponsesData['destination'];
-                $dureeSejour = $reponsesData['duree_sejour'];
-                $nombrePersonnes = $reponsesData['nombre_personne_sejour'];
-                $budget_sejour = $reponsesData['budget_sejour'];
-                $mobilite_sejour = $reponsesData['mobilite_sejour'];
-                $saison_destination = $reponsesData['saison_destination'];
-                $interet_preference = $reponsesData['interet_preference'];
-                $restrictions = $reponsesData['restrictions'];
+                        // Parcourir les questions et ajouter leurs IDs au tableau
+                        foreach ($questions as $question) {
+                            $questionIdsArray[] = $question->getId();
+                        }
+                        // On récupère les réponses soumises depuis le formulaire
+                        $reponsesData = $form->getData();
 
-                $finalData = [
-                    $destination, $dureeSejour, $nombrePersonnes, $budget_sejour, 
-                    $mobilite_sejour, $saison_destination, $interet_preference, $restrictions
-                ];
+                        $destination = $reponsesData['destination'];
+                        $dureeSejour = $reponsesData['duree_sejour'];
+                        $nombrePersonnes = $reponsesData['nombre_personne_sejour'];
+                        $budget_sejour = $reponsesData['budget_sejour'];
+                        $mobilite_sejour = $reponsesData['mobilite_sejour'];
+                        $saison_destination = $reponsesData['saison_destination'];
+                        $interet_preference = $reponsesData['interet_preference'];
+                        $restrictions = $reponsesData['restrictions'];
 
-                // Supposons que vous avez deux tableaux : $questionIdsArray et $reponsesData
+                        $finalData = [
+                            $destination, $dureeSejour, $nombrePersonnes, $budget_sejour, 
+                            $mobilite_sejour, $saison_destination, $interet_preference, $restrictions
+                        ];
 
-                // Créer un tableau pour stocker les associations question-réponse
-                $associations = [];
+                        // Supposons que vous avez deux tableaux : $questionIdsArray et $reponsesData
 
-                // Ajouter un élément vide au début du tableau $finalData pour que l'index 0 corresponde à la première question
-                // J'ai choisi de récupérer uniquement les réponses aux questions en les rangeant dans un tableau mais ça fonctionne également directement avec le tableau clé valeur $reponsesData
-                array_unshift($finalData, '');
+                        // Créer un tableau pour stocker les associations question-réponse
+                        $associations = [];
 
-                foreach ($questionIdsArray  as $questionId) {
-                    // Récupérer l'ID de la question
-                    // $questionId = $question->getId();
-                    $fieldName = $question->getNomQuestion();
-                    $reponse = $form->get($fieldName)->getData();
+                        // Ajouter un élément vide au début du tableau $finalData pour que l'index 0 corresponde à la première question
+                        // J'ai choisi de récupérer uniquement les réponses aux questions en les rangeant dans un tableau mais ça fonctionne également directement avec le tableau clé valeur $reponsesData
+                        array_unshift($finalData, '');
 
-                    // Vérifier si la réponse pour cette question existe dans le tableau des réponses
-                    if (array_key_exists($questionId, $finalData)) {
-                        // Récupérer la réponse correspondante
-                        $reponse = $finalData[$questionId];
+                        foreach ($questionIdsArray  as $questionId) {
+                            // Récupérer l'ID de la question
+                            // $questionId = $question->getId();
+                            $fieldName = $question->getNomQuestion();
+                            $reponse = $form->get($fieldName)->getData();
 
-                        // Associer l'ID de la question à la réponse dans le tableau d'associations
-                        $associations[$questionId] = $reponse;
+                            // Vérifier si la réponse pour cette question existe dans le tableau des réponses
+                            if (array_key_exists($questionId, $finalData)) {
+                                // Récupérer la réponse correspondante
+                                $reponse = $finalData[$questionId];
+
+                                // Associer l'ID de la question à la réponse dans le tableau d'associations
+                                $associations[$questionId] = $reponse;
+                            }
+                        }
+                        // dd($questionIdsArray, $finalData, $associations, $questionId);
+                        // Maintenant, vous avez un tableau $associations qui contient les associations entre IDs de question et réponses
+
+                        // Parcourir les associations et enregistrer les réponses en base de données
+                        foreach ($associations as $questionId => $reponse) {
+                            // Récupérer l'objet Question depuis la base de données
+                            $question = $questionsRepository->find($questionId);
+
+                            if ($question) {
+                                // Créer une nouvelle instance de Réponses
+                                $reponseEntity = new Reponses();
+                                $reponseEntity->setQuestion($question);
+                                $reponseEntity->setLaReponse($reponse);
+                                $reponseEntity->setUser($user);
+                                $reponseEntity->setFormNumber($formKey);
+                                // $reponseEntity->setReponseIA($json);
+                                $reponseEntity->setCreatedAt(new DateTimeImmutable());
+
+                                // Enregistrer la réponse en base de données
+                                $entityManager->persist($reponseEntity);
+                            }
+                        }
+
+                        $entityManager->flush();
+
+
+                        $flashy->success('Envoyé à l\'AI & à la base de donné ✅. Vas voir !');
+                        return $this->render('IAFolder/reponseIA.html.twig', [
+                            'form' => $form->createView(),
+                            'user' => $connectedUser,
+                            'json' => $json ?? null,
+                        ]);
                     }
+                    $flashy->success('Un problème est survenu lors de l\'envoie... ⛔ !');
                 }
-                // dd($questionIdsArray, $finalData, $associations, $questionId);
-                // Maintenant, vous avez un tableau $associations qui contient les associations entre IDs de question et réponses
+            } else {
+                 // Redirigez l'utilisateur vers la page d'abonnement et affichez un message flash
+                $flashy->error('Vous devez souscrire à un abonnement pour continuer à utiliser l\'outil.');
 
-                // Parcourir les associations et enregistrer les réponses en base de données
-                foreach ($associations as $questionId => $reponse) {
-                    // Récupérer l'objet Question depuis la base de données
-                    $question = $questionsRepository->find($questionId);
-
-                    if ($question) {
-                        // Créer une nouvelle instance de Réponses
-                        $reponseEntity = new Reponses();
-                        $reponseEntity->setQuestion($question);
-                        $reponseEntity->setLaReponse($reponse);
-                        $reponseEntity->setUser($user);
-                        $reponseEntity->setFormNumber($formKey);
-                        // $reponseEntity->setReponseIA($json);
-                        $reponseEntity->setCreatedAt(new DateTimeImmutable());
-
-                        // Enregistrer la réponse en base de données
-                        $entityManager->persist($reponseEntity);
-                    }
-                }
-
-                $entityManager->flush();
-
-
-                $flashy->success('Envoyé à l\'AI & à la base de donné ✅. Vas voir !');
-                return $this->render('IAFolder/reponseIA.html.twig', [
-                    'form' => $form->createView(),
-                    'user' => $connectedUser,
-                    'json' => $json ?? null,
-                ]);
+                // Redirection vers la page d'abonnement
+                return $this->redirectToRoute('abonnement');
             }
-            $flashy->success('Un problème est survenu lors de l\'envoie... ⛔ !');
         }
-
         return $this->render('IAFolder/formGPT.html.twig', [
             'form' => $form->createView(),
             'controller_name' => 'HomeController',
@@ -181,7 +199,8 @@ class ChatBotController extends AbstractController
         }
         else{
         // Récupérer tous les numéros de formulaire distincts
-        $distinctFormNumbers = $reponsesRepository->findDistinctFormNumbers();
+        // $distinctFormNumbers = $reponsesRepository->findDistinctFormNumbers();
+        $distinctFormNumbers = $reponsesRepository->findDistinctFormNumbersByUser($connectedUser);
 
         // Initialiser un tableau pour stocker les réponses par numéro de formulaire
         $responsesByForm = [];
@@ -193,7 +212,8 @@ class ChatBotController extends AbstractController
             $formNumber = $formNumberArray["formNumber"];
 
             // Récupérer les réponses associées à ce numéro de formulaire
-            $responsesForForm = $reponsesRepository->findByFormNumberCustom($formNumber);
+            // $responsesForForm = $reponsesRepository->findByFormNumberCustom($formNumber);
+            $responsesForForm = $reponsesRepository->findByFormNumberCustomAndUser($formNumber, $connectedUser);
             // $testNumber = $formNumber["formNumber"];
 
             // Stocker les réponses dans le tableau
