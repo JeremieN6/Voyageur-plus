@@ -7,6 +7,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\MoneyField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\SlugField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
 class PlanCrudController extends AbstractCrudController
@@ -24,7 +25,7 @@ class PlanCrudController extends AbstractCrudController
             SlugField::new('slug')->setTargetFieldName('nom'),
             TextField::new('stripe_id'),
             MoneyField::new('prix')->setCurrency('EUR'),
-            // TextEditorField::new('description'),
+            TextEditorField::new('description'),
             DateField::new('created_at','Crée le'),
             TextField::new('payment_link')
         ];
