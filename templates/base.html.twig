@@ -31,8 +31,8 @@
     {% if app.user and app.user.isVerified == false %}
     <div class="flashy flashy--warning">
         <i class="material-icons">speaker_notes</i>
-        <strong>Bonjour, </strong> votre compte n'est pas encore activé. <br>
-        <a class="flashy__body" href="{{path('resend_verif')}}" target="_blank">Renvoyez le lien d'activation.</a>
+        <strong>Bonjour, {{app.user.prenom}}</strong>, <br> votre compte n'est pas encore activé. <br> Un lien d'activation vous a été envoyé par mail.<br>
+        <a class="flashy__body" href="{{path('resend_verif')}}" target="_blank">Pas de lien ? <strong>Renvoyez le lien d'activation.</strong></a>
     </div>
     {% endif %}
 

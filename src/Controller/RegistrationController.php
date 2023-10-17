@@ -96,7 +96,7 @@ class RegistrationController extends AbstractController
                 $user->setisVerified(true);
                 $em->flush($user);
                 // $this->addFlash('succes', 'Utilisateur activé 🚀 !');
-                $flashy->success('Utilisateur activé 🚀 !');
+                $flashy->success('Félicitations ! Votre compte est activé 🚀 !');
                 return $this->redirectToRoute('app_home');
             }
         }
