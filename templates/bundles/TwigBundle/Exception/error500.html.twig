@@ -1,0 +1,21 @@
+{% extends "base_error.html.twig" %}
+
+{% block body %}
+<article id="article">
+    <hgroup>
+        <h2>Oups ! Une erreur est survenue ... 🫠</h2>
+        <p>
+            Veuillez recommencer ou patienter quelques instants ! <br>
+            En attendant je vous raccompagne à l'accueil.
+        </p>    
+    
+        <a href="{{path('app_home')}}">   
+            <button>Je retrouve mon chemin</button> 
+        </a>
+        <p style="text-align: center;">
+            Si vous êtes l'administrateur de ce merveilleux site, veuillez vérifier les logs afin de corriger rapidement le problème. <br> Merci
+        </p>
+    </hgroup>
+</article>
+
+{% endblock %}
