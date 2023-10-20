@@ -1,29 +1,88 @@
 <div class="container-fluid">
     {% if app.user %}
-    <nav>
-        <ul>
-            <a href="{{path('app_home')}}" class="no-styled-link"><li><strong>Voyageur +</strong></li></a>
-        </ul>
-        <ul>
-            <li><a href="{{path('app_generate_plan')}}">Pannificateur IA</a></li>
-            <li><a href="{{path('app_voyages')}}">Mes voyages</a></li>
-            <li><a href="{{path('abonnement')}}">Abonnements</a></li>
-            <li><a href="{{path('app_contact')}}" role="button">Contact</a></li>
-            <li><a href="{{path('app_logout')}}">Deconnexion</a></li>
-            <li><a id="theme_switcher"></a></li>
-        </ul>
-    </nav>
+    <div class="nav__desktop">
+        <nav>
+            <ul>
+                <a href="{{path('app_home')}}" class="no-styled-link"><li><strong>Voyageur +</strong></li></a>
+            </ul>
+            <ul>
+                <li><a href="{{path('app_generate_plan')}}">Pannificateur IA</a></li>
+    
+                <li><a href="{{path('app_contact')}}" role="button">Contact</a></li> 
+                <div id="mySidenav" class="sidenav">
+                    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+                    <li><a href="{{path('myAccount')}}">Mon compte</a></li>
+                    <li><a href="{{path('app_voyages')}}">Mes voyages</a></li>
+                    <li><a href="{{path('abonnement')}}">Abonnements</a></li>
+                    <hr>
+                    <li><a href="{{path('app_logout')}}">Deconnexion</a></li>
+                </div>           
+                <span class="user-icon" onclick="openNav()">
+                    Mon compte
+                </span>
+                <li><a id="theme_switcher"></a></li>
+            </ul>
+        </nav>
+    </div>
+    <div class="nav__mobile">
+        <nav>
+            <ul>
+                <a href="{{path('app_home')}}" class="no-styled-link"><li><strong>Voyageur +</strong></li></a>
+            </ul>
+            <ul>
+                <li><a href="{{path('app_generate_plan')}}">Pannificateur IA</a></li>
+    
+                <li><a href="{{path('app_contact')}}" role="button">Contact</a></li> 
+                <div id="mySidenav" class="sidenav">
+                    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+                    <li><a href="{{path('app_voyages')}}">Mes voyages</a></li>
+                    <li><a href="{{path('abonnement')}}">Abonnements</a></li>
+                    <hr>
+                    <li><a href="{{path('app_logout')}}">Deconnexion</a></li>
+                </div>           
+                <span class="user-icon" onclick="openNav()">
+                    Mon compte
+                </span>
+                <li><a id="theme_switcher_mobile"></a></li>
+            </ul>
+        </nav>
+    </div>
     {% else %}
-    <nav>
-        <ul>
-            <a href="{{path('app_home')}}" class="no-styled-link"><li><strong>Voyage +</strong></li></a>
-        </ul>
-        <ul>
-            <li><a href="{{path('app_login')}}">Connexion</a></li>
-            <li><a href="{{path('app_register')}}">Inscription</a></li>
-            <li><a href="{{path('app_contact')}}" role="button">Contact</a></li>
-            <li><a id="theme_switcher"></a></li>
-        </ul>
-    </nav>
+    <div class="nav__desktop">
+        <nav>
+            <ul>
+                <a href="{{path('app_home')}}" class="no-styled-link"><li><strong>Voyage +</strong></li></a>
+            </ul>
+            <ul>
+                <li><a href="{{path('app_login')}}">Connexion</a></li>
+                <li><a href="{{path('app_register')}}">Inscription</a></li>
+                <li><a href="{{path('app_contact')}}" role="button">Contact</a></li>
+                <li><a id="theme_switcher"></a></li>
+            </ul>
+        </nav>
+    </div>
+    <div class="nav__mobile">
+        <nav>
+            <ul>
+                <li><a id="theme_switcher_mobile"></a></li>
+            </ul>
+            <ul>
+                <a href="{{path('app_home')}}" class="no-styled-link"><li><strong>Voyage +</strong></li></a>
+            </ul>
+            <ul>
+                <div id="mySidenav" class="sidenav">
+                    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+                    <a href="{{path('app_home')}}" class="no-styled-link"><li><strong>Accueil</strong></li></a>
+                    <li><a href="{{path('app_login')}}">Connexion</a></li>
+                    <li><a href="{{path('app_register')}}">Inscription</a></li>
+                    <hr>
+                    <li><a href="{{path('app_contact')}}">Contact</a></li>
+                </div>           
+                <span class="user-icon" onclick="openNav()">
+                    <i class="fa fa-bars"></i>
+                </span>
+            </ul>
+        </nav>
+    </div>
     {% endif %}
 </div>

@@ -76,7 +76,7 @@ class HomeController extends AbstractController
             $email = (new Email())
                 ->from($mailAdress)
                 ->to('contact@voyageur-plus.fr')
-                ->subject('Email de contact')
+                ->subject('Email reçu depuis la page contact')
                 ->text($emailMessage);
 
                 $mailer->send($email);

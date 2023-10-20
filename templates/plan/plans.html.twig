@@ -4,28 +4,28 @@
 
 {% block body %}
 
-{% for item in Plan %}
-
 <div class="grid">
-    <article id="article">
-        <h3>
-            {{item.nom}}
-        </h3>
-        <p>
-            {{item.description|raw}}
-        </p>
-
-        <a href="{{item.paymentLink}}" target="_blank">
-            <button>S'abonner</button>
-        </a>
+    {% for item in Plan %}
+    <div>
+        <article id="article">
+            <h3>
+                {{item.nom}}
+            </h3>
+            <p>
+                {{item.description|raw}}
+            </p>
     
-        <footer>
-            <small><em>Par Voyageur+</em></small>
-        </footer>
-    
-      </article>
+            <a href="{{item.paymentLink}}" target="_blank">
+                <button>S'abonner</button>
+            </a>
+        
+            <footer>
+                <small><em>Par Voyageur+</em></small>
+            </footer>
+        
+          </article>
+    </div>
+    {% endfor %}
 </div>
-
-{% endfor %}
 
 {% endblock %}
