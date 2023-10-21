@@ -4,4 +4,68 @@
 
 {% block body %}
 
+<div class="container">
+    <div class="container_informations">
+        <div class="content_informations">
+            <hgroup class="infos">
+                {# <p>Image plus tard</p> #}
+                <h3>{{connectedUser.prenom}} {{connectedUser.nom}}</h3> 
+                <p>{{connectedUser.description}}</p>
+                <p><i class="fa fa-map-marker"></i> {{connectedUser.ville}}, {{connectedUser.codePostal}}</p>
+            </hgroup>
+        </div>
+        <div class="grid">
+            <button><a href="{{path('app_generate_plan')}}">Planifier mon prochain séjour</a></buttton>
+            <button class="outline"><a href="{{path('about')}}">Nous contactez</a></buttton>
+        </div>
+        <hgroup class="containerUserInfo">
+            <div class="grid">
+                <div>
+                    <article id="article">
+                        {% if distinctFormNumbers > 1 %}
+                        <h4>Nombre de planning générés</h4>
+                        {% else %}
+                        <h4>Nombre de planning généré</h4>
+                        {% endif %}
+                            <p class="planningNumber">{{distinctFormNumbers}}</p>
+                        <footer><small>Par Voyageur+</small></footer>
+                    </article>
+                </div>
+                <div>
+                    <article id="article">
+                        <h4>Un abonnement en cours ?</h4>
+                                {% if hasActiveSubscription == true %}
+                                    <p>                            
+                                        Vous avez souscris à un abonnement <strong> {{planName}}</strong>. <br><br>
+                                        Votre abonnement s'étend du <br>  <strong>{{startDate}}</strong> <br> au <br> <strong>{{endDate}}</strong>.
+                                    </p>
+                                    {% else %}
+                                    <p>                            
+                                        Vous n'avez aucun abonnement en cours !
+                                    </p>
+                                {% endif %}
+                        <footer><small>Par Voyageur+</small></footer>
+                    </article>
+                </div>
+                <div>
+                    <article id="article">
+                        <h4>Abonné à la newsletter ?</h4>
+                        {% if isOnNewsletterSubscriber == true %}
+                            <p>
+                                Magnifique. Vérifiez vos mails, des jeux concours, des cadeaux et de nombreuses actualités vous attendent. 💫
+                            </p>
+                            {% else %}
+                            <p>
+                                Vous n'êtes pas encore abonné à la Newsletter, vous ratez un nombre incalculable de promotions et d'actualité en tout genre. Dommage 😔
+                            </p>
+                            {% endif %}
+                        <footer><small>Par Voyageur+</small></footer>
+                    </article>
+                </div>
+            </div>
+        </hgroup>
+        
+    </div>
+</div>
+
 {% endblock %}

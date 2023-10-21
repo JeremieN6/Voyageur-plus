@@ -7,7 +7,6 @@
             </ul>
             <ul>
                 <li><a href="{{path('app_generate_plan')}}">Pannificateur IA</a></li>
-    
                 <li><a href="{{path('app_contact')}}" role="button">Contact</a></li> 
                 <div id="mySidenav" class="sidenav">
                     <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
@@ -18,7 +17,7 @@
                     <li><a href="{{path('app_logout')}}">Deconnexion</a></li>
                 </div>           
                 <span class="user-icon" onclick="openNav()">
-                    Mon compte
+                   Mon Profil
                 </span>
                 <li><a id="theme_switcher"></a></li>
             </ul>
@@ -27,23 +26,27 @@
     <div class="nav__mobile">
         <nav>
             <ul>
+                <li><a id="theme_switcher_mobile"></a></li>
+            </ul>
+            <ul>
                 <a href="{{path('app_home')}}" class="no-styled-link"><li><strong>Voyageur +</strong></li></a>
             </ul>
             <ul>
-                <li><a href="{{path('app_generate_plan')}}">Pannificateur IA</a></li>
-    
-                <li><a href="{{path('app_contact')}}" role="button">Contact</a></li> 
-                <div id="mySidenav" class="sidenav">
-                    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+                <div id="mySidenavMobile" class="sidenav">
+                    <a href="javascript:void(0)" class="closebtn" onclick="closeNavMobile()">&times;</a>
+                    <li><a href="{{path('app_generate_plan')}}">Pannificateur IA</a></li>
+                    <hr>
+                    <li><a href="{{path('myAccount')}}">Mon compte</a></li>
                     <li><a href="{{path('app_voyages')}}">Mes voyages</a></li>
                     <li><a href="{{path('abonnement')}}">Abonnements</a></li>
+                    <li><a href="{{path('app_contact')}}">Contact</a></li> 
                     <hr>
                     <li><a href="{{path('app_logout')}}">Deconnexion</a></li>
                 </div>           
-                <span class="user-icon" onclick="openNav()">
-                    Mon compte
+                <span class="user-icon">
+                    <i class="fa fa-bars" onclick="openNavMobile()"></i>
                 </span>
-                <li><a id="theme_switcher_mobile"></a></li>
+                
             </ul>
         </nav>
     </div>

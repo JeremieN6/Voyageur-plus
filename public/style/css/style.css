@@ -68,3 +68,28 @@
         }
     }
 /* NAV */
+/* MY ACCOUNT */
+.content_informations{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    flex-direction: column;
+}
+
+.infos p{
+    margin-bottom: 0;
+}
+
+.container_button{
+    display: flex;
+}
+.planningNumber{
+    font-size: 30px;
+    font-weight: bold;
+}
+.containerUserInfo h4,
+.containerUserInfo p{
+    text-align: center;
+}
+/* MY ACCOUNT */
