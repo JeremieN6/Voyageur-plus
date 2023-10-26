@@ -11,7 +11,7 @@
                 {% if connectedUser.imageFile != null %}
                 <img src="{{vich_uploader_asset(connectedUser, 'imageFile')}}" class="userAvatar" alt="user avatar">
                 {% else %}
-                <img src="{{asset('images/user/user.jpg')}}" class="userAvatar" alt="user avatar">
+                <img src="{{asset('images/defaultUser/user.jpg')}}" class="userAvatar" alt="user avatar">
                 {% endif %}
                 <h3>{{connectedUser.prenom}} {{connectedUser.nom}}</h3> 
                 <p>{{connectedUser.description}}</p>
