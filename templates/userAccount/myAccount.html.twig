@@ -8,7 +8,7 @@
     <div class="container_informations">
         <div class="content_informations">
             <hgroup class="infos">
-                {# <p>Image plus tard</p> #}
+                <img src="{{vich_uploader_asset(connectedUser, 'imageFile')}}" class="userAvatar" alt="user avatar">
                 <h3>{{connectedUser.prenom}} {{connectedUser.nom}}</h3> 
                 <p>{{connectedUser.description}}</p>
                 <p><i class="fa fa-map-marker"></i> {{connectedUser.ville}}, {{connectedUser.codePostal}}</p>
@@ -17,6 +17,7 @@
         <div class="grid">
             <button><a href="{{path('app_generate_plan')}}">Planifier mon prochain séjour</a></buttton>
             <button class="outline"><a href="{{path('about')}}">Nous contactez</a></buttton>
+            <button><a href="{{path('modif_profil')}}">Modifier mon profil</a></buttton>
         </div>
         <hgroup class="containerUserInfo">
             <div class="grid">

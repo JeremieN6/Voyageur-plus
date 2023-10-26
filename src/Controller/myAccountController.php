@@ -5,9 +5,12 @@ namespace App\Controller;
 use App\Repository\NewsletterRepository;
 use App\Repository\ReponsesRepository;
 use App\Repository\SubscriptionRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Form\UserFormType;
 
 class myAccountController extends AbstractController
 {   
@@ -87,11 +90,47 @@ class myAccountController extends AbstractController
             'hasActiveSubscription' => $hasActiveSubscription,
             'isOnNewsletterSubscriber' => $isOnNewsletterSubscriber,
             'startDate' => $startDate, 'endDate' => $endDate, 'planName' => $planName
-
-
         ]);
     }
 
+    
+    #[Route('/modification-profil', name: 'modif_profil')]
+    public function modificationProfil(
+        Request $request, 
+        EntityManagerInterface $em,
+        \MercurySeries\FlashyBundle\FlashyNotifier $flashy): Response
+    {
+
+        //On récupère l'utilisateur connecté
+        $connectedUser = $this->getUser();
+        //On crée le formulaire
+        $userForm = $this->createForm(UserFormType::class, $connectedUser);
+        //On traite la requête du formulaire
+        $userForm->handleRequest($request);
+
+
+        //On vérifie si le formulaire est soumis ET valide
+        if($userForm->isSubmitted() && $userForm->isValid()){
+
+            //envoie a l'entité
+            $em->persist($connectedUser);
+            $em->flush();
+
+            $flashy->success('Ton profil a été modifié avec succès ! 🚀');
+
+            //On redirige
+            return $this->redirectToRoute('myAccount');
+        }
+
+        // dd($userForm);
+
+        return $this->render('userAccount/modification_profil.html.twig', [
+            'controller_name' => 'HomeController',
+            'userForm' => $userForm->createView(),
+            'connectedUser' => $connectedUser
+        ]);
+    }
+    
     #[Route('/mes_voyages', name: 'app_voyages')]
     public function mesVoyages(
         ReponsesRepository $reponsesRepository,

@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Voyage + | Mon Compte {% endblock %}
+
+{% block body %}
+
+{{ form_start(userForm) }}
+{{ form_end(userForm) }}
+<button class="outline"><a href="{{path('myAccount')}}">Retour</a></buttton>
+
+{% endblock %}

@@ -9,10 +9,17 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Serializer\Annotation\Ignore;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\DBAL\Types\Types;
+use Serializable;
 
 #[ORM\Entity(repositoryClass: UsersRepository::class)]
-#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
-class Users implements UserInterface, PasswordAuthenticatedUserInterface
+#[Vich\Uploadable]
+#[UniqueEntity(fields: ['email'], message: 'Il y a déjà un compte avec cet email !')]
+class Users implements UserInterface, PasswordAuthenticatedUserInterface, Serializable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -55,6 +62,13 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $description = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $file = null;
+
+    #[Vich\UploadableField(mapping: 'featured_profils', fileNameProperty: 'file')]  
+    #[Assert\File(maxSize:'2M', maxSizeMessage:  'La taille du fichier ne doit pas dépasser 2 Mo.')]
+    private $imageFile;
+
     #[ORM\Column(type: 'boolean')]
     private $is_verified = false;
 
@@ -63,6 +77,9 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(type: 'datetime_immutable', options: ['default' => 'CURRENT_TIMESTAMP'])]
     private ?\DateTimeImmutable $created_at = null;
+
+    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $updated_at = null;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Reponses::class, orphanRemoval: true)]
     private Collection $reponses;
@@ -246,6 +263,34 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    public function getFile(): ?string
+    {
+        return $this->file;
+    }
+
+    public function setFile(?string $file): self
+    {
+        $this->file = $file;
+
+        return $this;
+    }
+
+    public function getImageFile(File $image = null)
+    {
+        return $this->imageFile;
+    }
+
+    public function setImageFile(File $image = null)
+    {        
+        $this->imageFile = $image;
+
+         if($image) {
+            $this->file = $image->getFilename();
+             $this->updated_at = new \DateTime('now');
+         }
+
+    }
+
     public function getIsVerified(): ?bool
     {
         return $this->is_verified;
@@ -278,6 +323,18 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     public function setCreatedAt(\DateTimeImmutable $created_at): self
     {
         $this->created_at = $created_at;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeInterface
+    {
+        return $this->updated_at;
+    }
+
+    public function setUpdatedAt(?\DateTimeInterface $updated_at): self
+    {
+        $this->updated_at = $updated_at;
 
         return $this;
     }
@@ -363,5 +420,29 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
         $this->stripeId = $stripeId;
 
         return $this;
+    }
+
+    public function serialize()
+    {
+        return serialize(array(
+            $this->id,
+            $this->email,
+            $this->password,
+            $this->file,
+            // see section on salt below
+            // $this->salt,
+        ));
+    }
+
+    public function unserialize($serialized)
+    {
+        list (
+            $this->id,
+            $this->email,
+            $this->password,
+            $this->file,
+            // see section on salt below
+            // $this->salt
+        ) = unserialize($serialized);
     }
 }
