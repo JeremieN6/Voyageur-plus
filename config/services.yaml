@@ -10,6 +10,13 @@ parameters:
     stripe_sk: '%env(resolve:STRIPE_SK)%'
     stripe_pk: '%env(resolve:STRIPE_PK)%'
     app.path.featured_profils: /upload/images/profil
+    aws_access_key_id: '%env(resolve:AWS_ACCESS_KEY_ID)%'
+    aws_secret_access_key: '%env(resolve:AWS_SECRET_ACCESS_KEY)%'
+    aws_default_region: '%env(resolve:AWS_DEFAULT_REGION)%'
+    aws_bucket: '%env(resolve:AWS_BUCKET)%'
+    aws_s3_base_url: '%env(resolve:AWS_S3_BASE_URL)%'
+    aws_s3_endpoint: '%env(resolve:AWS_S3_ENDPOINT)%'
+
 
 services:
      # default configuration for services in *this* file
@@ -33,3 +40,11 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+    Aws\S3\S3Client:
+        arguments:
+            - version: 'latest'
+              region: '%env(resolve:AWS_DEFAULT_REGION)%'
+              #endpoint: '%env(resolve:AWS_S3_ENDPOINT)%'
+              credentials:
+                key: '%env(resolve:AWS_ACCESS_KEY_ID)%'
+                secret: '%env(resolve:AWS_SECRET_ACCESS_KEY)%'
