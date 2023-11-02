@@ -8,6 +8,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
 class UsersCrudController extends AbstractCrudController
@@ -25,8 +26,15 @@ class UsersCrudController extends AbstractCrudController
             EmailField::new('email'),
             TextField::new('nom'),
             TextField::new('prenom'),
+            TextField::new('pseudo'),
             IntegerField::new('telephone'),
             TextField::new('ville'),
+            TextareaField::new('description')->onlyOnForms(),
+            IntegerField::new('codePostal')->onlyOnForms(),
+            TextField::new('adresse')->onlyOnForms(),
+            // ImageField::new('file')->setBasePath('%aws_s3_base_url%/upload/profil/images')->onlyOnIndex(),
+            // ImageField::new('file')->setBasePath('%aws_s3_base_url%/upload/profil/images')->onlyOnDetail(),
+            // ImageField::new('file')->setUploadDir('upload/profil/images')->onlyOnForms(),
             ImageField::new('file')->setBasePath('upload/images/profil')->setUploadDir('public/upload/images/profil'),
             // TextField::new('imageFile')->setFormType(VichImageType::class)->hideOnIndex(),
             // ImageField::new('featured_image')->setBasePath('upload/images/featured')->onlyOnIndex(),

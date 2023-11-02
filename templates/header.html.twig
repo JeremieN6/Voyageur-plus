@@ -10,6 +10,10 @@
                 <li><a href="{{path('app_contact')}}" role="button">Contact</a></li> 
                 <div id="mySidenav" class="sidenav">
                     <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <li><a href="{{path('admin')}}" target="_blank">Administrateur</a></li>
+                    {% endif %}
+                    <hr>
                     <li><a href="{{path('myAccount')}}">Mon compte</a></li>
                     <li><a href="{{path('app_voyages')}}">Mes voyages</a></li>
                     <li><a href="{{path('abonnement')}}">Abonnements</a></li>
@@ -34,6 +38,10 @@
             <ul>
                 <div id="mySidenavMobile" class="sidenav">
                     <a href="javascript:void(0)" class="closebtn" onclick="closeNavMobile()">&times;</a>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <li><a href="{{path('admin')}}" target="_blank">Administrateur</a></li>
+                    {% endif %}
+                    <hr>
                     <li><a href="{{path('app_generate_plan')}}">Pannificateur IA</a></li>
                     <hr>
                     <li><a href="{{path('myAccount')}}">Mon compte</a></li>
