@@ -8,10 +8,10 @@
     <div class="container_informations">
         <div class="content_informations">
             <hgroup class="infos">
-                {% if connectedUser.imageFile != null %}
+                {% if connectedUser.file != null %}
                 <img src="{{vich_uploader_asset(connectedUser, 'imageFile')}}" class="userAvatar" alt="user avatar">
                 {% else %}
-                <img src="{{asset('images/defaultUser/user.jpg')}}" class="userAvatar" alt="user avatar">
+                <img src="{{asset('images/defaultUser/user.jpg')}}" class="userAvatar" alt="default avatar">
                 {% endif %}
                 <h3>{{connectedUser.prenom}} {{connectedUser.nom}}</h3> 
                 <p>{{connectedUser.description}}</p>
