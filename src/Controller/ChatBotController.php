@@ -166,6 +166,10 @@ class ChatBotController extends AbstractController
                 return $this->redirectToRoute('abonnement');
             }
         }
+        else{
+            $flashy->warning('Attention, vous devez être connecté, ou vous inscrire pour utiliser l\'outil.');
+            return $this->redirectToRoute('app_login');
+        }
         return $this->render('IAFolder/formGPT.html.twig', [
             'form' => $form->createView(),
             'controller_name' => 'HomeController',
