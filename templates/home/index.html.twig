@@ -9,9 +9,17 @@
       <p>Bienvenue sur notre plateforme de planification de voyages nouvelle génération, propulsée par <b>l'intelligence artificielle.</b> <br>
         Découvrez notre outil permettant d'optimiser votre expérience de voyage.
         Dites adieu aux heures passées à chercher les meilleures activités à faire lors de votre séjour, car nous nous sommes occupés de tout pour vous !</p>
+        {# <div class="grid">
+          <a href="{{path('app_generate_plan')}}">
+            <button>Démarrer</buttton>
+          </a>
+          <a href="{{path('about')}}">
+            <button class="outline">En savoir plus</buttton>
+          </a>
+        </div> #}
         <div class="grid">
-          <button><a href="{{path('app_generate_plan')}}">Démarrer</a></buttton>
-          <button class="outline"><a href="{{path('about')}}">En savoir plus</a></buttton>
+          <a href="{{ path('app_generate_plan') }}" class="button full-width-button-classic">Démarrer</a>
+          <a href="{{ path('about') }}" class="button outline full-width-button-outline">En savoir plus</a>
         </div>
     </hgroup>
     <div>

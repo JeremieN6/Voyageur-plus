@@ -16,3 +16,57 @@ a, a:hover, a:active{
   color: inherit;
   text-decoration: none;
 }
+
+.full-width-button-classic{
+  display: inline-block;
+  width: 100%;
+  text-align: center;
+  text-decoration: none;
+  padding: var(--form-element-spacing-vertical) var(--form-element-spacing-horizontal);
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--border-radius);
+  outline: 0;
+  background-color: var(--primary);
+  box-shadow: var(--box-shadow);
+  color: var(--color);
+  font-weight: var(--font-weight);
+  font-size: 1rem;
+  line-height: var(--line-height);
+  text-align: center;
+  cursor: pointer;
+  transition: background-color var(--transition),border-color var(--transition),color var(--transition),box-shadow var(--transition);
+  color: #FFF;
+}
+
+.full-width-button-outline{
+  display: inline-block;
+  width: 100%;
+  text-align: center;
+  text-decoration: none;
+  padding: var(--form-element-spacing-vertical) var(--form-element-spacing-horizontal);
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--border-radius);
+  outline: 0;
+  border: 1px solid var(--primary);
+  box-shadow: var(--box-shadow);
+  color: var(--color);
+  font-weight: var(--font-weight);
+  font-size: 1rem;
+  line-height: var(--line-height);
+  text-align: center;
+  cursor: pointer;
+  transition: background-color var(--transition),border-color var(--transition),color var(--transition),box-shadow var(--transition);
+  color: var(--primary);
+}
+
+.full-width-button-classic:hover{
+  background-color: #158576;
+  /* border-color: var(--primary-hover);
+  box-shadow: var(--button-hover-box-shadow, 0 0 0 rgba(0, 0, 0, 0));
+  color: var(--primary-inverse); */
+}
+
+.full-width-button-outline:hover{
+  --background-color: transparent;
+  --color: var(--primary-hover);
+}
