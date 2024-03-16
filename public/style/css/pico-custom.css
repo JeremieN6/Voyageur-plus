@@ -17,6 +17,25 @@ a, a:hover, a:active{
   text-decoration: none;
 }
 
+button, a[role=button], [type=submit]{
+  background-color: var(--primary);
+  border: 1px solid var(--primary);
+  color: #FFF;
+}
+
+button:hover, a[role=button]:hover,
+[type=submit]:hover{
+  background-color: var(--primary-hover);
+  border: 1px solid var(--primary-hover);
+  color: #CCC;
+}
+
+/* HOME */
+.container-btn{
+  margin-top: 1em;
+}
+/* HOME */
+
 .full-width-button-classic{
   display: inline-block;
   width: 100%;
