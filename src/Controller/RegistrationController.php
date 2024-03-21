@@ -55,7 +55,7 @@ class RegistrationController extends AbstractController
             $token = $jwt->generate($header, $payload, $this->getParameter('app.jwtsecret'));
              //On envoie un mail
              $mail->send(
-                'no-replay@voyageur-plus.fr',
+                'contact@voyageur-plus.jeremiecode.fr',
                 $user->getEmail(),
                 'Activation de votre compte',
                 'register',
@@ -140,7 +140,7 @@ class RegistrationController extends AbstractController
             $token = $jwt->generate($header, $payload, $this->getParameter('app.jwtsecret'));
             //On envoie un mail
             $mail->send(
-                'no-replay@voyageur-plus.fr',
+                'contact@voyageur-plus.jeremiecode.fr',
                 $user->getEmail(),
                 'Activation de votre compte',
                 'register',

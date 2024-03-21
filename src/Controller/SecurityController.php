@@ -74,7 +74,7 @@ class SecurityController extends AbstractController
 
                 //Envoie du mail
                 $mail->send(
-                    'no-replay@voyageur-plus.fr',
+                    'contact@voyageur-plus.jeremiecode.fr   ',
                     $user->getEmail(),
                     'Réinitialisation de Mot de Passe',
                     'password_reset',
