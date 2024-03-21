@@ -70,13 +70,21 @@ class HomeController extends AbstractController
         if ($contactForm->isSubmitted() && $contactForm->isValid()){
             $data = $contactForm->getData();
 
-            $mailAdress = $data['email'];
-            $emailMessage = $data['message'];
+            $defaultEmail = 'contact@voyageur-plus.jeremiecode.fr'; // Adresse de l'expéditeur par défaut
+            $senderName = $data['prenom'];
+            $senderEmail = $data['email'];
+            $emailMessage = 'Email envoyé par : ' . $senderName . "\n\nAdresse email : " .$senderEmail. "\n\n" . $data['message'];
+
+            // Version original avec la récupération de l'email de la personne remplissant le formulaire de contact
+            // $mailAdress = $data['email'];
+            // $emailMessage = $data['message'];
 
             $email = (new Email())
-                ->from($mailAdress)
-                ->to('contact@voyageur-plus.fr')
-                ->subject('Email reçu depuis la page contact')
+                // ->from($mailAdress)
+                ->from($defaultEmail)
+                ->to('contact@voyageur-plus.jeremiecode.fr')
+                // ->to('contact@voyageur-plus.fr')
+                ->subject('Email reçu depuis la page contact de Voyageur +')
                 ->text($emailMessage);
 
                 $mailer->send($email);
