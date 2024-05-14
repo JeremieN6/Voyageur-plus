@@ -445,4 +445,9 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface, Serial
             // $this->salt
         ) = unserialize($serialized);
     }
+
+    public function __toString(): string
+    {
+        return $this->prenom ? (string) $this->prenom : '';
+    }
 }
