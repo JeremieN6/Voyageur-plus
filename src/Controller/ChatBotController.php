@@ -38,6 +38,11 @@ class ChatBotController extends AbstractController
             $activeSubscriptions = $subscriptionRepository->hasActiveSubscription($connectedUser);
             $formSubmissionLimit = 3;
             $formSubmissionsNumber = $reponsesRepository->countDistinctFormNumbersByUser($connectedUser);
+
+            // Vérifiez si l'utilisateur est un administrateur
+            if (in_array('ROLE_ADMIN', $connectedUser->getRoles())) {
+                $formSubmissionLimit = PHP_INT_MAX; // Limite illimitée pour les admins
+            }
         
             if (count($activeSubscriptions) > 0 || $formSubmissionsNumber < $formSubmissionLimit) {
 
@@ -60,7 +65,7 @@ class ChatBotController extends AbstractController
                         $restrictions
                     );
                     // On test la réponse de l'API 
-                    // dd($json);
+                    dd($json);
 
                     //On récupère le user connecté
                     $user = $this->getUser();
