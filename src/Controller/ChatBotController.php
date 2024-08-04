@@ -65,7 +65,7 @@ class ChatBotController extends AbstractController
                         $restrictions
                     );
                     // On test la réponse de l'API 
-                    dd($json);
+                    // dd($json);
 
                     //On récupère le user connecté
                     $user = $this->getUser();
