@@ -3,16 +3,18 @@
 namespace App\Service;
 
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
-use Orhanerday\OpenAi\OpenAi;
-use Symfony\Component\Serializer\Encoder\JsonDecode;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
-class OpenAiService{
-    public function __construct(
-        private ParameterBagInterface $parameterBag,
-    )
+class OpenAiService {
+    private $apiKey;
+    private $httpClient;
+
+    public function __construct(ParameterBagInterface $parameterBag, HttpClientInterface $httpClient)
     {
-        
+        $this->apiKey = $parameterBag->get('OPENAI_API_KEY');
+        $this->httpClient = $httpClient;
     }
+
     public function getDestination(
         string $destination, 
         int $duree_sejour, 
@@ -24,38 +26,49 @@ class OpenAiService{
         array $restrictions): string
     {
         
-     
-        $openai_api_key = $this->parameterBag->get('OPENAI_API_KEY');
-        $open_ai = new OpenAi($openai_api_key);
+    // Formater le prompt avec les informations fournies
+    $prompt = sprintf(
+        "En tant qu'expert Guide touristique. Fais moi un planning sur mon séjour dont la destination est : %s et qui vas durer %d jours. Le nombre de voyageur pour ce séjour est de %d personnes. Le budget par personne est de %d. Pendant mon voyage, la saison de la destination sera : %s. Pendant ce voyage, le moyen de déplacement sera exclusivement : %s. Voici mes préférences de voyage : %s. Voici les choses à éviter : %s. En te basant sur ces éléments, rédige une liste pour chaque jour de mon séjour.",
+        $destination,
+        $duree_sejour,
+        $nombre_personne_sejour,
+        $budget_sejour,
+        $saison_destination,
+        $mobilite_sejour,
+        implode(', ', $interet_preference),
+        implode(', ', $restrictions)
+    );
 
-        $complete = $open_ai->completion([
-            'model' => 'text-davinci-003',
-            'prompt' => 'En tant qu\'expert Guide touristique.
-            Fais moi un planning sur mon séjour dont la destination est :' .$destination.' et qui vas durer'.$duree_sejour.'jours.
-            Le nombre de voyageur pour ce séjour est de'.$nombre_personne_sejour.'personnes.
-            Le budget par personne est de'.$budget_sejour.'.
-            Pendant mon voyage la saison de la destination sera en : '.$saison_destination.'
-            Pendant ce voyage le moyen de déplacement sera exclusivement en : '.$mobilite_sejour.'
-            Je vais pour finir te donner une liste de mes préférence lorsque je voyage : '.implode(',', $interet_preference).'.
-            et une liste de toute les choses dont je ne veux pas entendre parler pendant mon séjour : '.implode(',', $restrictions).'
-            En te basant sur les élements que je t\'ai fourni, rédige moi une liste en revenant à la ligne pour chaque nouveau jour.',
-            // 'prompt' => 'Trouve moi des choses à voir pour mon voyage à {{destination}}. Pour ce voyage il y a {nbr_personne} pour {nbr_jour} jours. On a une aversion pour {aversion}.', Ajoute les variables dans les parametres de la fonction sendMessage
-            'temperature' => 0,
-            'max_tokens' => 3500,
-            'frequency_penalty' => 0.5,
-            'presence_penalty' => 0,
+    // Data structure for the chat model endpoint
+    $data = [
+        'model' => 'gpt-3.5-turbo',
+        'messages' => [
+            ['role' => 'system', 'content' => 'You are a helpful assistant.'],
+            ['role' => 'user', 'content' => $prompt]
+        ],
+        'max_tokens' => 3500,
+        'temperature' => 0.7,
+    ];
+
+    try {
+        $response = $this->httpClient->request('POST', 'https://api.openai.com/v1/chat/completions', [
+            'headers' => [
+                'Content-Type' => 'application/json',
+                'Authorization' => 'Bearer ' . $this->apiKey,
+            ],
+            'json' => $data,
         ]);
 
-        $json = json_decode($complete, true);
+        $content = $response->getContent();
+        $decodedResponse = json_decode($content, true);
 
-        if (isset($json['choices'][0]['text'])) {
-            $json = $json['choices'][0]['text'];
-
-            return $json;
+        if (isset($decodedResponse['choices'][0]['message']['content'])) {
+            return $decodedResponse['choices'][0]['message']['content'];
+        } else {
+            return 'Une erreur est survenue dans la réponse de l\'API.';
         }
-
-        $json = 'Une erreur est survenue !';
-
-        return $json;
+    } catch (\Exception $e) {
+        return 'Erreur lors de la requête à l\'API : ' . $e->getMessage();
     }
+}
 }
