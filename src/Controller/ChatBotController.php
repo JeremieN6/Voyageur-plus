@@ -145,7 +145,7 @@ class ChatBotController extends AbstractController
                                 $reponseEntity->setLaReponse($reponse);
                                 $reponseEntity->setUser($user);
                                 $reponseEntity->setFormNumber($formKey);
-                                // $reponseEntity->setReponseIA($json);
+                                $reponseEntity->setReponseIA($json);
                                 $reponseEntity->setCreatedAt(new DateTimeImmutable());
 
                                 // Enregistrer la réponse en base de données
