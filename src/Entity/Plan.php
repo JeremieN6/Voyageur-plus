@@ -163,4 +163,9 @@ class Plan
 
         return $this;
     }
+
+    public function __toString(): string
+    {
+        return $this->nom ? (string) $this->nom : '';
+    }
 }
