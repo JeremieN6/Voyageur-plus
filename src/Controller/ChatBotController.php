@@ -36,7 +36,7 @@ class ChatBotController extends AbstractController
 
         if($connectedUser){
             $activeSubscriptions = $subscriptionRepository->hasActiveSubscription($connectedUser);
-            $formSubmissionLimit = 3;
+            $formSubmissionLimit = 10;
             $formSubmissionsNumber = $reponsesRepository->countDistinctFormNumbersByUser($connectedUser);
 
             // Vérifiez si l'utilisateur est un administrateur
