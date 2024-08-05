@@ -40,9 +40,9 @@ class ChatBotController extends AbstractController
             $formSubmissionsNumber = $reponsesRepository->countDistinctFormNumbersByUser($connectedUser);
 
             // Vérifiez si l'utilisateur est un administrateur
-            if (in_array('ROLE_ADMIN', $connectedUser->getRoles())) {
-                $formSubmissionLimit = PHP_INT_MAX; // Limite illimitée pour les admins
-            }
+            // if (in_array('ROLE_ADMIN', $connectedUser->getRoles())) {
+            //     $formSubmissionLimit = PHP_INT_MAX; // Limite illimitée pour les admins
+            // }
         
             if (count($activeSubscriptions) > 0 || $formSubmissionsNumber < $formSubmissionLimit) {
 
@@ -156,7 +156,8 @@ class ChatBotController extends AbstractController
                         $entityManager->flush();
 
 
-                        $flashy->success('Envoyé à l\'AI & à la base de donné ✅. Vas voir !');
+                        $flashy->success('Planning généré avec succès ! ✅');
+                        // $flashy->success('Envoyé à l\'AI & à la base de donné ✅. Vas voir !');
                         return $this->render('IAFolder/reponseIA.html.twig', [
                             'form' => $form->createView(),
                             'user' => $connectedUser,
