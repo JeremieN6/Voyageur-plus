@@ -39,10 +39,26 @@ class ChatBotController extends AbstractController
             $formSubmissionLimit = 10;
             $formSubmissionsNumber = $reponsesRepository->countDistinctFormNumbersByUser($connectedUser);
 
-            // Vérifiez si l'utilisateur est un administrateur
-            // if (in_array('ROLE_ADMIN', $connectedUser->getRoles())) {
-            //     $formSubmissionLimit = PHP_INT_MAX; // Limite illimitée pour les admins
-            // }
+            $roles = $connectedUser->getRoles();
+
+            // Structure de la colonne 'roles' en production : 
+            // Assurez-vous que les données stockées sont bien sous forme de JSON.
+            // Par exemple, les données dans la base de données doivent ressembler à ["ROLE_USER", "ROLE_ADMIN"].
+            if (is_string($roles)) {
+                $roles = json_decode($roles, true);
+            
+                // Gestion des erreurs : Si la colonne 'roles' ne contient pas toujours des données valides
+                // (comme des chaînes JSON incorrectes), il pourrait être utile d'ajouter des vérifications supplémentaires pour gérer ces cas.
+                if (json_last_error() !== JSON_ERROR_NONE) {
+                    // Gestion de l'erreur, par exemple en enregistrant un message d'erreur ou en utilisant une valeur par défaut.
+                    // Vous pouvez aussi choisir d'ignorer l'erreur ou de définir des actions spécifiques en fonction du cas.
+                    $roles = []; // Valeur par défaut en cas d'erreur de décodage
+                }
+            }
+            
+            if (is_array($roles) && in_array('ROLE_ADMIN', $roles)) {
+                $formSubmissionLimit = PHP_INT_MAX; // Limite illimitée pour les admins
+            }
         
             if (count($activeSubscriptions) > 0 || $formSubmissionsNumber < $formSubmissionLimit) {
 
