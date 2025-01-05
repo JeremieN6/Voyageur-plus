@@ -89,3 +89,9 @@ button:hover, a[role=button]:hover,
   --background-color: transparent;
   --color: var(--primary-hover);
 }
+
+.__registerForm__customAlignment div {
+  display: flex !important;
+  flex-direction: row-reverse !important;
+  align-items: center !important;
+}
