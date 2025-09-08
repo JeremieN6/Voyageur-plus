@@ -39,16 +39,22 @@
                 <div>
                     <article id="article">
                         <h4>Un abonnement en cours ?</h4>
-                                {% if hasActiveSubscription == true %}
-                                    <p>                            
-                                        Vous avez souscris à un abonnement <strong> {{planName}}</strong>. <br><br>
-                                        Votre abonnement s'étend du <br>  <strong>{{startDate}}</strong> <br> au <br> <strong>{{endDate}}</strong>.
-                                    </p>
-                                    {% else %}
-                                    <p>                            
-                                        Vous n'avez aucun abonnement en cours !
-                                    </p>
-                                {% endif %}
+                        {% set now = "now"|date('U') %}
+                        {% if hasActiveSubscription and endDate|date('U') >= now %}
+                                <p>
+                                    Vous avez souscris à un abonnement <strong>{{ planName }}</strong>. <br><br>
+                                    Votre abonnement s'étend du <br> <strong>{{ startDate }}</strong> <br> au <br> <strong>{{ endDate }}</strong>.
+                                </p>
+                            {% elseif hasActiveSubscription and endDate|date('U') < now %}
+                                <p>
+                                    Votre abonnement <strong>{{ planName }}</strong> a expiré le <strong>{{ endDate }}</strong>. <br>
+                                    Renouvelez pour continuer à générer des plannings sans limitation.
+                                </p>
+                            {% else %}
+                                <p>
+                                    Vous n'avez aucun abonnement en cours !
+                                </p>
+                        {% endif %}
                         <footer><small>Par Voyageur+</small></footer>
                     </article>
                 </div>
