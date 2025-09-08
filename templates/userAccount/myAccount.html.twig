@@ -45,7 +45,7 @@
                                     Vous avez souscris à un abonnement <strong>{{ planName }}</strong>. <br><br>
                                     Votre abonnement s'étend du <br> <strong>{{ startDate }}</strong> <br> au <br> <strong>{{ endDate }}</strong>.
                                 </p>
-                            {% elseif hasActiveSubscription && endDate|date('U') < now %}
+                            {% elseif hasActiveSubscription & endDate|date('U') < now %}
                                 <p>
                                     Votre abonnement <strong>{{ planName }}</strong> a expiré le <strong>{{ endDate }}</strong>. <br>
                                     Renouvelez pour continuer à générer des plannings sans limitation.
