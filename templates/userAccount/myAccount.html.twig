@@ -39,21 +39,41 @@
                 <div>
                     <article id="article">
                         <h4>Un abonnement en cours ?</h4>
-                        {% set now = "now"|date('U') %}
-                        {% if hasActiveSubscription and endDate|date('U') >= now %}
-                                <p>
-                                    Vous avez souscris à un abonnement <strong>{{ planName }}</strong>. <br><br>
-                                    Votre abonnement s'étend du <br> <strong>{{ startDate }}</strong> <br> au <br> <strong>{{ endDate }}</strong>.
-                                </p>
-                            {% elseif hasActiveSubscription & endDate|date('U') < now %}
-                                <p>
-                                    Votre abonnement <strong>{{ planName }}</strong> a expiré le <strong>{{ endDate }}</strong>. <br>
-                                    Renouvelez pour continuer à générer des plannings sans limitation.
-                                </p>
-                            {% else %}
-                                <p>
-                                    Vous n'avez aucun abonnement en cours !
-                                </p>
+                        {#
+                            Correction: on ne tente plus de parser une chaîne FR du type "03/09/2024 à 19:21" via le filtre date() (erreur strtotime).
+                            Attendu côté contrôleur (idéal) :
+                              - variables bool : subscriptionActive, subscriptionExpired
+                              - OU un objet DateTime : endDateObj (et éventuellement startDateObj)
+                              - OU un timestamp numérique : endDateTimestamp
+                            Ce bloc crée des fallbacks sans jamais parser la chaîne formatée.
+                        #}
+                        {% set nowTs = "now"|date('U') %}
+                        {# Récupération sécurisée du timestamp de fin #}
+                        {% set endTs =
+                            endDateObj is defined
+                                ? endDateObj|date('U')
+                                : (endDateTimestamp is defined
+                                    ? endDateTimestamp
+                                    : null)
+                        %}
+                        {# Flags avec fallback si non fournis par le contrôleur #}
+                        {% set subscriptionActiveFlag = subscriptionActive is defined ? subscriptionActive : (hasActiveSubscription and endTs is not null and endTs >= nowTs) %}
+                        {% set subscriptionExpiredFlag = subscriptionExpired is defined ? subscriptionExpired : (hasActiveSubscription and endTs is not null and endTs < nowTs) %}
+
+                        {% if hasActiveSubscription and subscriptionActiveFlag %}
+                            <p>
+                                Vous avez souscris à un abonnement <strong>{{ planName }}</strong>. <br><br>
+                                Votre abonnement s'étend du <br> <strong>{{ startDate }}</strong> <br> au <br> <strong>{{ endDate }}</strong>.
+                            </p>
+                        {% elseif hasActiveSubscription and subscriptionExpiredFlag %}
+                            <p>
+                                Votre abonnement <strong>{{ planName }}</strong> a expiré le <strong>{{ endDate }}</strong>. <br>
+                                Renouvelez pour continuer à générer des plannings sans limitation.
+                            </p>
+                        {% else %}
+                            <p>
+                                Vous n'avez aucun abonnement en cours !
+                            </p>
                         {% endif %}
                         <footer><small>Par Voyageur+</small></footer>
                     </article>
